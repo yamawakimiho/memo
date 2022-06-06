@@ -1,0 +1,10 @@
+version: "3.0"
+services:
+    lb:
+        image: postgres:10.4
+        container_name: postgres
+        env_file: .env
+        volumes:
+            - "./srv/docker/postgres/:/var/lib/postgresql/data"
+        ports:
+            - "50001:5432"
