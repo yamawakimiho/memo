@@ -1,11 +1,99 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Please, login</title>
-</head>
-<body>
-    Hello World
-</body>
-</html>
+{% extends 'frontend/base.html' %} 
+{% block content %}
+
+
+<style>
+  .hide{
+    display:none;
+  }
+
+  .show{
+    display:inline;
+  }
+</style>
+<div class="container">
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <h1>Hello, {{ user.username }}</h1>
+          <div class="container">
+            <div class="row" id="card_list"></div>
+          </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content %} 
+
+{% block js %}
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "http://localhost:8000/api/card_lists/",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+              for (let index = 0; index < data.length; index++){
+                $("#card_list").append(loadCardListCard(data[index]));
+              }
+              cardListLoaded(data);
+            },
+        });
+    });
+
+    const loadCardListCard = (data) => { 
+      card = ` 
+      <div class="col-md-4">
+      <div class="card text-center any-card" 
+      style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;"
+      id=${data.id}>
+        <div class="card-body">
+        <h4 class="card-title">${data.name}</h5>
+        <p class="card-text">Created by: ${data.owner}</p>
+        <p class="card-text">${data.description}</p>
+        </div>
+        <div class="card-footer text-muted">
+          <p class="card-text">Total cards: ${data.cards.length}</p>
+        </div>
+        </div>`;
+        // <p class="card-text">Date: ${data.created_at}</p>
+  return card;
+}
+
+// const cardListLoaded = (data) => {
+//   $( ".any-card" ).click(function() {
+//     let id = $(this).attr('id');
+//     const filteredCards = data.filter((card) => card.id == id);
+// 
+//     console.log(filteredCards)
+//     // let cards = filteredCards.map(card => console.log(card.cards))
+//     $("#card_list").addClass('hide')
+//     $("#cards").html(cards)
+//   });
+// }
+// 
+// const loadCardList = (data) => {
+//   card = '';
+// 
+//   card += ` 
+//       <div class="col-md-4">
+//       <div class="card text-center any-card" 
+//       style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;"
+//       id=${data.id}>
+//         <div class="card-body">
+//         <h4 class="card-title">${data.name}</h5>
+//         <p class="card-text">Created by: ${data.owner}</p>
+//         <p class="card-text">${data.description}</p>
+//         </div>
+//         <div class="card-footer text-muted">
+//           <p class="card-text">Total cards:</p>
+//         </div>
+//         </div>`;
+// 
+//         return card;
+// }
+
+</script>
+{% endblock js %}
+
+
+

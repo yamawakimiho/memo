@@ -1,7 +1,8 @@
-from django.urls import path
 
-from . import views
+from rest_framework.routers import SimpleRouter
+from .views import CardListViewSet, CardViewSet, CardAnswerHistoryViewSet
 
-urlpatterns = [
-    path('', views.index, name='index')
-]
+router = SimpleRouter()
+router.register('card_lists', CardListViewSet)
+router.register('cards', CardViewSet)
+router.register('cards_answers_history', CardAnswerHistoryViewSet)
