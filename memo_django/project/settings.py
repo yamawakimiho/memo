@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     # app
     'memo',
-    'accounts'
+    'accounts',
+    'memo_front'
 ]
 
 MIDDLEWARE = [
@@ -126,6 +127,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # DRF
 REST_FRAMEWORK = {
+    'DATETIME_FORMAT': '%b %d, %Y',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         ),

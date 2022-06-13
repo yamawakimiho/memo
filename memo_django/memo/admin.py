@@ -12,5 +12,5 @@ class CardAdmin(admin.ModelAdmin):
 
 @admin.register(CardAnswerHistory)
 class CardAnswerHistoryAdmin(admin.ModelAdmin):
-    list_display = ('user_answer', 'correct', 'created_at','card')
+    list_display = ('user_answer', 'correct', 'created_at','card','owner')
 
