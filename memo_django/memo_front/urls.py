@@ -5,6 +5,6 @@ from . import views
 app_name = 'memo_front'
 
 urlpatterns = [
-    path('list/<slug:card_list_id>/', views.card_list, name="card_list"),
-    path('<slug:card_id>/', views.assigment, name="assigment")
+    path('list/<slug:deck_id>/', views.card_list, name="card_list"),
+    path('assigment/<slug:deck_id>/', views.assigment, name="assigment")
 ]

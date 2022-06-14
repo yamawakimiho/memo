@@ -1,7 +1,11 @@
 {% extends 'frontend/base.html' %} 
 {% block content %}
-
 <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div style="width:100%; height: 1rem;"></div>
+        </div>
+    </div>
     <div class="jumbotron">
         <div class="container">
             <div class="row align-items-center ">
@@ -21,15 +25,12 @@
       </div>
     </div>
 </div>
-
 {% endblock content %} 
 {% block js %}
 <script>
-    const authToken = localStorage.getItem("auth");
-
     $(document).ready(function () {
         $.ajax({
-            url: "/api/decks/{{ card_list_id }}/",
+            url: "/api/decks/{{ deck_id }}/",
             type: "GET",
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization", "Token " + authToken);
@@ -40,77 +41,50 @@
                     alert('Card list not found!');
                     window.location.href = "/";
                 }else{
-                    console.log(data)
                     loadPageTemplate(data[0]);
+                    disableStartButtonIfCardDoesntExist();
                 }
             }
         });
     });
 
-    const openModal = (options, id) => {
-        $('#modal').modal('show');
-        var modalTemplate = loadModalTemplates(options,id); 
-        modalTitle.innerHTML = modalTemplate.title;
-        modalDescription.innerHTML = modalTemplate.description;
-        modalButton.innerHTML = modalTemplate.button;
-    }
-
-    const loadModalTemplates = (options, id) => {
-        var template = {};
-            if(options === "addCard"){
-                template.title = "Add new card";
-                template.button = "<button type='button' class='btn btn-primary' onclick='addCard("+ id +")'>Save</button>";
-                template.description = `
-                    <div class="form-group">
-                       <label for="front">Front side of the new card (Question)</label>
-                       <input type="text" class="form-control input-field" id="cardFront" aria-describedby="front">
-                       <div  id="invalidCheckCardFront" class="invalid-feedback">
-                        Please provide a question.
-                        </div>
-                     </div>
-                     <div class="form-group">
-                       <label for="back">Back side of the new card (Answer)</label>
-                       <input type="text" class="form-control input-field" id="cardBack" aria-describedby="back">
-                       <div  id="invalidCheckCardBack" class="invalid-feedback">
-                        Please provide an answer.
-                        </div>
-                     </div>`
-            }
-        return template;
-    }
-
     function loadPageTemplate(data){
-        title.innerHTML = `<h1>${data.name}</h1>`;
+        title.innerHTML = `<a href="{% url 'accounts:index' %}">
+            <div class="goBack" id="goBack">&#8249;</div></a> ` + data.name;
         legend.innerHTML = '<p><b>Created at:</b> ' + data.created_at + ' - <b>by</b> '  + data.username + '</p><p>' + data.description + '</p>';
         buttons.innerHTML = `<div style="padding-bottom:10px;">
-            <button type="button" class="btn btn-success btn-lg" style="margin-right:10px">Start</button>
-            <button type="button" class="btn btn-danger btn-lg">Delete this card</button>
+            <a href="{% url 'memo_front:assigment' deck_id=deck_id  %}"><button type="button" class="btn btn-success btn-lg" style="margin-right:10px" id="startButton">Start</button></a>
             <button type="button" class="btn btn-info btn-lg" onClick="openModal('addCard',${data.id})">Add card</button>
+            <button type="button" class="btn btn-danger btn-lg" onclick="openModal('deleteDeck',${data.id})">Delete this deck</button>
         </div>`;
 
         for (let index = 0; index < data.cards.length; index++){
           $("#cards").append(loadCardTemplate(data.cards[index]));
         }
     }
-
+    
     const loadCardTemplate = (data) => { 
       card = ` 
         <div class="col-md-4" id="card_id_${data.id}">
-        <div class="card text-center any-card" 
-        style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;">
-        <div class="card-header text-muted">
-        </div>
-        <div class="card-body">
-        <h2 class="card-title">${data.front}</h2>
-        <p class="card-text">Created by: ${data.username}</p>
-        </div>
-        <div class="card-footer text-muted">
-        <button type="button" class="btn btn-outline-danger btn-sm" onClick="deleteCard(${data.id})">Delete</button>
-        <button type="button" class="btn btn-outline-warning btn-sm">Update</button>
-        <button type="button" class="btn btn-outline-info btn-sm">History</button>
-        </div>
+            <div class="card text-center any-card" style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;">
+                <div class="card-header text-muted"></div>
+                <div class="card-body">
+                    <h2 class="card-title">${data.front}</h2>
+                    <p class="card-text">Created by: ${data.username}</p>
+                </div>
+            <div class="card-footer text-muted">
+                <button type="button" class="btn btn-outline-danger btn-sm" onClick="deleteCard(${data.id})">Delete</button>
+                <button type="button" class="btn btn-outline-warning btn-sm" onclick="openModal('updateCard',${data.id})">Update</button>
+                <button type="button" class="btn btn-outline-info btn-sm" onclick="openModal('historyCard',${data.id})">History</button>
+            </div>
         </div>`;
         return card;
+    }    
+    
+    const disableStartButtonIfCardDoesntExist = () => {
+        ($("#cards").children().length > 0) ?  
+        $('#startButton').prop("disabled", false) : 
+        $('#startButton').prop("disabled", true);
     }
 
     const addCard = (deck_id) => {
@@ -135,6 +109,7 @@
             success: function (response) {
                 $('#modal').modal('hide');
                 $("#cards").append(loadCardTemplate(response));
+                disableStartButtonIfCardDoesntExist();
             },
             error: function(response){
                 alert(response);
@@ -153,8 +128,27 @@
             success: function (response) {
                 if(response.status == 1){
                     document.getElementById("card_id_" + card_id).remove();
+                    disableStartButtonIfCardDoesntExist();
                 }else{
                     alert("Não foi possível apagar o card.")
+                }
+            }
+        });
+    }
+
+    const deleteDeck = (deck_id) => {  
+        $.ajax({
+            url: "/api/decks/" + deck_id + "/",
+            type: "DELETE",
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "Token " + authToken);
+            },
+            dataType: "json",
+            success: function (response) {
+                if(response.status == 1){
+                    window.location.href = "/";
+                }else{
+                    alert("Não foi possível apagar o deck.")
                 }
             }
         });
