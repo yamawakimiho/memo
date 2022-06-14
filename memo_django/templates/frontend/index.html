@@ -1,6 +1,5 @@
 {% extends 'frontend/base.html' %} 
 {% block content %}
-
 <style>
   .hide{
     display:none;
@@ -35,12 +34,13 @@
 {% endblock content %} 
 {% block js %}
 <script>
-    $(document).ready(function () {
-      localStorage.setItem("auth",'{{ auth }}')
-      loadPage();
-    });
+  $(document).ready(function () {
+    loadPage();
+  });
 
   const loadPage = () => {
+    var authToken = localStorage.getItem("auth");
+
     buttons.innerHTML = `<div style="padding-bottom:10px;">
           <button type="button" class="btn btn-info btn-lg" onClick="openModal('addDeck')">Add deck</button>
       </div>`;
@@ -48,6 +48,9 @@
     $.ajax({
         url: "/api/decks/",
         type: "GET",
+        beforeSend: function(request) {
+          request.setRequestHeader("Authorization", "Token " + authToken);
+        },
         dataType: "json",
         success: function (data) {
           for (let index = 0; index < data.length; index++){
@@ -102,7 +105,6 @@ const addDeck = () => {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-              console.log(response);
                 $('#modal').modal('hide');
                 $("#deck_list").append(loadDecksCards(response));
                 decksLoaded();

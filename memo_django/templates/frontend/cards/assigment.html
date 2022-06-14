@@ -153,10 +153,6 @@
         </thead>
         <tbody>`;
 
-        returnIcon = (isCorrect) => {
-            return (isCorrect) ? '✔️' : '❌';
-        };
-
         resultData.map((card) => { resultTemplate += `
             <tr>
               <td>${card.front}</td>
@@ -198,7 +194,6 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                console.log("Send");
             },
             error: function(response){
                 console.log("response");

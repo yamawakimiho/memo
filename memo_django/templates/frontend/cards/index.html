@@ -42,7 +42,7 @@
                     window.location.href = "/";
                 }else{
                     loadPageTemplate(data[0]);
-                    disableStartButtonIfCardDoesntExist();
+                    disableStartButtonIfCardDoesntExists();
                 }
             }
         });
@@ -63,28 +63,95 @@
         }
     }
     
-    const loadCardTemplate = (data) => { 
+    const loadCardTemplate = (data) => {
+      let answerHistoryButtonDisabled =  (data.card_history.length > 0) ? '' : 'disabled';
+
       card = ` 
         <div class="col-md-4" id="card_id_${data.id}">
             <div class="card text-center any-card" style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;">
                 <div class="card-header text-muted"></div>
                 <div class="card-body">
-                    <h2 class="card-title">${data.front}</h2>
+                    <h2 class="card-title cardFrontSelector">${data.front}</h2>
+                    <input type="hidden" class="cardBackSelector" value="${data.back}">
                     <p class="card-text">Created by: ${data.username}</p>
                 </div>
             <div class="card-footer text-muted">
-                <button type="button" class="btn btn-outline-danger btn-sm" onClick="deleteCard(${data.id})">Delete</button>
-                <button type="button" class="btn btn-outline-warning btn-sm" onclick="openModal('updateCard',${data.id})">Update</button>
-                <button type="button" class="btn btn-outline-info btn-sm" onclick="openModal('historyCard',${data.id})">History</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" 
+                onClick="deleteCard(${data.id})">Delete</button>
+                <button type="button" class="btn btn-outline-warning btn-sm" 
+                onclick="openModal('updateCard',${data.id})">Update</button>
+                <button type="button" class="btn btn-outline-info btn-sm" 
+                onclick="openModal('historyCard',${data.id})" ${answerHistoryButtonDisabled}>History</button>
             </div>
         </div>`;
         return card;
     }    
     
-    const disableStartButtonIfCardDoesntExist = () => {
+    function getAnswerHistory(card_id){
+        $.ajax({
+            url: "/api/cards/" + card_id + "/card_answer/",
+            type: "GET",
+            beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "Token " + authToken);
+                },
+            dataType: "json",
+            success: function (data) {
+                let result = "";
+
+                data.map((answer) => { result += `
+                <tr>
+                <td>${answer.user_answer}</td>
+                <td>${returnIcon(answer.correct)}</td>
+                <td>${answer.updated_at}</td>
+                </tr>`});
+
+              $("#table_answer").append(result);
+            },
+        })
+    }
+
+    const getCardSelectorValue = (id) => {
+        var text = {};
+        text.front = $('#card_id_' + id + ' .cardFrontSelector').text();
+        text.back = $('#card_id_' + id + ' .cardBackSelector').val();
+
+        return text;
+    }
+
+    const disableStartButtonIfCardDoesntExists = () => {
         ($("#cards").children().length > 0) ?  
         $('#startButton').prop("disabled", false) : 
         $('#startButton').prop("disabled", true);
+    }
+
+    const updateCard = (card_id) => {
+        cardFront = $("#cardFront").val();
+        cardBack = $("#cardBack").val();
+
+        var jsonData = {
+            "front": cardFront,
+            "back": cardBack
+        };
+
+        $.ajax({
+            url: "/api/cards/" + card_id + "/",
+            type: "PUT",
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "Token " + authToken);
+            },
+            data: JSON.stringify(jsonData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $('#modal').modal('hide');
+                $('#card_id_' + card_id + ' .cardFrontSelector').text(cardFront)
+                $('#card_id_' + card_id + ' .cardBackSelector').val(cardBack)
+
+            },
+            error: function(response){
+                alert(response);
+            }
+        });
     }
 
     const addCard = (deck_id) => {
@@ -109,7 +176,7 @@
             success: function (response) {
                 $('#modal').modal('hide');
                 $("#cards").append(loadCardTemplate(response));
-                disableStartButtonIfCardDoesntExist();
+                disableStartButtonIfCardDoesntExists();
             },
             error: function(response){
                 alert(response);
@@ -128,7 +195,7 @@
             success: function (response) {
                 if(response.status == 1){
                     document.getElementById("card_id_" + card_id).remove();
-                    disableStartButtonIfCardDoesntExist();
+                    disableStartButtonIfCardDoesntExists();
                 }else{
                     alert("Não foi possível apagar o card.")
                 }

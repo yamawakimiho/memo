@@ -1,8 +1,7 @@
 const openModal = (options, id = null) => {
-
     $('#modal').modal('show');
     var modalTemplate = loadModalTemplates(options,id); 
-    console.log(modalTemplate)
+
     $("#modalTitle").html(modalTemplate.title);
     $("#modalDescription").html(modalTemplate.description);
     $("#modalButton").html(modalTemplate.button);
@@ -49,25 +48,27 @@ const loadModalTemplates = (options, id) => {
                 </div>`
         }else if(options === "deleteDeck"){
             template.title = "Delete deck confirmation";
-            template.button = "<button type='button' class='btn btn-warning' onclick='deleteDeck("+ id +")'>Confirm Delete</button>";
+            template.button = "<button type='button' class='btn btn-danger' onclick='deleteDeck("+ id +")'>Confirm Delete</button>";
             template.description = `
                 <div class="form-group">
                     Are you sure you want to delete this deck?
                 </div>`
         }else if(options === "updateCard"){
+            cardInfo = getCardSelectorValue(id);
+
             template.title = "Update card";
-            template.button = "<button type='button' class='btn btn-warning' onclick='deleteDeck("+ id +")'>Confirm Delete</button>";
+            template.button = "<button type='button' class='btn btn-warning' onclick='updateCard("+ id +")'>Confirm Update</button>";
             template.description = `
                 <div class="form-group">
                 <label for="front">Front side of the new card (Question)</label>
-                <input type="text" class="form-control input-field" id="cardFront" aria-describedby="front">
+                <input type="text" class="form-control input-field" value="${cardInfo.front}" id="cardFront" aria-describedby="front">
                 <div  id="invalidCheckCardFront" class="invalid-feedback">
                 Please provide a question.
                 </div>
                 </div>
                 <div class="form-group">
                 <label for="back">Back side of the new card (Answer)</label>
-                <input type="text" class="form-control input-field" id="cardBack" aria-describedby="back">
+                <input type="text" class="form-control input-field" id="cardBack" value="${cardInfo.back}" aria-describedby="back">
                 <div  id="invalidCheckCardBack" class="invalid-feedback">
                 Please provide an answer.
                 </div>
@@ -75,10 +76,26 @@ const loadModalTemplates = (options, id) => {
         }else if(options === "historyCard"){
             template.title = "Answer History";
             template.button = "";
-            template.description = `
-            <div class="form-group">
-                
-            </div>`
+
+            let description = '<div class="form-group">'; 
+            description += `<table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Answer</th>
+                <th scope="col">Result</th>
+                <th scope="col">Date</th>
+              </tr>
+            </thead>
+            <tbody id="table_answer">`;
+            description += '</tbody></table></div>';
+            description += "<script>getAnswerHistory("+ id +")</script>";
+            template.description = description;
         }
     return template;
 }
+
+returnIcon = (isCorrect) => {
+    return (isCorrect) ? '✔️' : '❌';
+};
+
+
