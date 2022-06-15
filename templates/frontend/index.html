@@ -1,0 +1,122 @@
+{% extends 'frontend/base.html' %} 
+{% block content %}
+<style>
+  .hide{
+    display:none;
+  }
+  .show{
+    display:inline;
+  }
+
+  .text-ellipsis{
+   text-overflow: ellipsis;
+   overflow: hidden;
+   white-space: nowrap;
+  }
+</style>
+<div class="container">
+    <div class="jumbotron">
+        <div class="row align-items-center" style="padding-bottom:30px;">
+            <div class="col-md-6">
+              <h1>Hello, {{ user.username }}</h1>
+                <div id="legend"></div>
+            </div>
+            <div class="col-md-6 align-self-center" style="text-align: center;">
+                <div id="buttons"></div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row" id="deck_list"></div>
+          </div>
+      </div>
+    </div>
+</div>
+{% endblock content %} 
+{% block js %}
+<script>
+  $(document).ready(function () {
+    loadPage();
+  });
+
+  const loadPage = () => {
+    var authToken = localStorage.getItem("auth");
+
+    buttons.innerHTML = `<div style="padding-bottom:10px;">
+          <button type="button" class="btn btn-info btn-lg" onClick="openModal('addDeck')">Add deck</button>
+      </div>`;
+
+    $.ajax({
+        url: "/api/decks/",
+        type: "GET",
+        beforeSend: function(request) {
+          request.setRequestHeader("Authorization", "Token " + authToken);
+        },
+        dataType: "json",
+        success: function (data) {
+          for (let index = 0; index < data.length; index++){
+            $("#deck_list").append(loadDecksCards(data[index]));
+          }
+          decksLoaded();
+        },
+    });
+  }
+
+  const loadDecksCards = (data) => { 
+    card = ` 
+    <div class="col-md-4">
+    <div class="card text-center any-card" 
+    style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;"
+    id=${data.id}>
+    <div class="card-body">
+    <h4 class="card-title">${data.name}</h5>
+    <p class="card-text">Created by: ${data.username}</p>
+    <p class="card-text text-ellipsis">${data.description}</p>
+    </div>
+    <div class="card-footer text-muted">
+    <p class="card-text">Total cards: ${data.cards.length}</p>
+    </div>
+    </div>`;
+  return card;
+}
+
+const decksLoaded = () => {
+  $( ".any-card" ).click(function() {
+    let id = $(this).attr('id');
+        window.location.href = "/cards/list/" + id + "/";
+  });
+}
+
+const addDeck = () => {
+        deckName = $("#deckName").val();
+        deckDescription = $("#deckDescription").val();
+
+        var jsonData = {
+            "name": deckName,
+            "description": deckDescription
+        };
+        
+        $.ajax({
+            url: "/api/decks/",
+            type: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "Token " + authToken);
+            },
+            data: JSON.stringify(jsonData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $('#modal').modal('hide');
+                $("#deck_list").append(loadDecksCards(response));
+                decksLoaded();
+            },
+            error: function(response){
+                alert(response);
+            }
+        });
+    }
+
+</script>
+{% endblock js %}
+
+
+
