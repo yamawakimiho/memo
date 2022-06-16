@@ -1,6 +1,6 @@
 # Memo Django
 <p align="center">
-<img src="readme_assets/memo-logo.png" width="50%">
+<a href="https://memo-memo.herokuapp.com/" target="_blank"><img src="readme_assets/memo-logo.png" width="50%"></a>
 </p>
 
 ![Heroku](https://pyheroku-badge.herokuapp.com/?app=memo-memo&style=flat)
@@ -46,6 +46,17 @@ Use the login credencial below to access the web application:
     </td>
     <td>
       <img src="readme_assets/deck.png" width="100%">
+    </td>
+  </tr>
+</table>
+
+<table> 
+  <tr>
+    <td>
+      <img src="readme_assets/assigment.png" width="100%">
+    </td>
+    <td>
+      <img src="readme_assets/result.png" width="100%">
     </td>
   </tr>
 </table>
