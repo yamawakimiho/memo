@@ -54,14 +54,14 @@
         dataType: "json",
         success: function (data) {
           for (let index = 0; index < data.length; index++){
-            $("#deck_list").append(loadDecksCards(data[index]));
+            $("#deck_list").append(loadDecks(data[index]));
           }
           decksLoaded();
         },
     });
   }
 
-  const loadDecksCards = (data) => { 
+  const loadDecks = (data) => { 
     card = ` 
     <div class="col-md-4">
     <div class="card text-center any-card" 
@@ -106,11 +106,15 @@ const addDeck = () => {
             dataType: "json",
             success: function (response) {
                 $('#modal').modal('hide');
-                $("#deck_list").append(loadDecksCards(response));
+                $("#deck_list").append(loadDecks(response));
                 decksLoaded();
             },
             error: function(response){
-                alert(response);
+              if(response.status == 0){
+                alert("The new deck should contain at least 2 characters");
+              }else{
+                alert("Deck was not created. Try again.")
+              }
             }
         });
     }

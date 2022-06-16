@@ -36,9 +36,13 @@ class DecksAPIView(APIView):
     def post(self,request):
         context = {'request':request}
         serializer = CardListSerializer(data=request.data, context=context)
+
+        if(len(request.data['name']) <= 2):
+            return Response({"status":"0"}, status=status.HTTP_400_BAD_REQUEST)
+        
         if serializer.is_valid():
             serializer.save(owner_id=request.user.id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
         return Response(serializer.errors)
 class CardAnswersAPIView(generics.ListCreateAPIView):
     queryset = CardAnswerHistory.objects.all()
@@ -80,7 +84,7 @@ class CardsAPIView(APIView):
         serializer = CardSerializer(cards, data=request.data, context=context)
         if serializer.is_valid():
             serializer.save()
-            return Response({"statis":1}, status=status.HTTP_200_OK)
+            return Response({"statis":"1"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request, pk):
