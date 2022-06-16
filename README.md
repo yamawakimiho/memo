@@ -1,8 +1,11 @@
 # Memo Django
+<p align="center">
+<img src="readme_assets/memo-logo.png" width="50%">
+</p>
 
 ![Heroku](https://pyheroku-badge.herokuapp.com/?app=memo-memo&style=flat)
 
-
+<p >
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
@@ -35,6 +38,17 @@ Use the login credencial below to access the web application:
 ```
 
 ### Screenshots
+
+<table>
+  <tr>
+    <td>
+      <img src="readme_assets/index.png" width="100%">
+    </td>
+    <td>
+      <img src="readme_assets/deck.png" width="100%">
+    </td>
+  </tr>
+</table>
 
 ### Project Structure
 
