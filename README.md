@@ -26,10 +26,9 @@
 
 ## About the memo
 
-Memo is a flashcard-like web application built with Django, Django Rest Framework, jQuery and Bootstrap. You can create your own deck and also create flashcards you want to learn. The object of this application is to make larning interesting and fun. 
+Memo is a flashcard-like web application built with Django, Django Rest Framework, jQuery and Bootstrap. You can create your own deck and also create flashcards with about contents you want to learn. The object of this application is to make learning interesting and fun. 
 
 You can check the deployed project [here](https://memo-memo.herokuapp.com/).
-
 
 Use the login credencial below to access the web application: 
 ```
