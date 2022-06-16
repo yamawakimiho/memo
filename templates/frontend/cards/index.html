@@ -38,7 +38,7 @@
             dataType: "json",
             success: function (data) {
                 if(data == ""){
-                    alert('Card list not found!');
+                    alert('Deck not found!');
                     window.location.href = "/";
                 }else{
                     loadPageTemplate(data[0]);
@@ -167,6 +167,11 @@
         cardFront = $("#cardFront").val();
         cardBack = $("#cardBack").val();
 
+        if(cardFront == "" || cardBack.length == ""){
+            alert('Please fill out the required field(s)')
+            return;
+        }
+
         var jsonData = {
             "front": cardFront,
             "back": cardBack,
@@ -210,7 +215,7 @@
                     document.getElementById("card_id_" + card_id).remove();
                     disableStartButtonIfCardDoesntExists();
                 }else{
-                    alert("Não foi possível apagar o card.")
+                    alert("Unable to delete the card. Try again.")
                 }
             },
             complete: function(){
@@ -232,7 +237,7 @@
                 if(response.status == 1){
                     window.location.href = "/";
                 }else{
-                    alert("Não foi possível apagar o deck.")
+                    alert("Unable to delete the deck. Try again.")
                 }
             },
             complete: function(){
