@@ -26,13 +26,13 @@
 {% endblock content %} 
 {% block js %}
     <script>
-    var deckData = [];
-    var cardIndex = 0;
-    var resultData = [];
+    let deckData = [];
+    let cardIndex = 0;
+    let resultData = [];
 
-    var progressTotal = 0;
-    var progressFailure = 0;
-    var progressSuccess = 0;
+    let progressTotal = 0;
+    let progressFailure = 0;
+    let progressSuccess = 0;
     
     $(document).ready(function () {
         $.ajax({
@@ -44,7 +44,7 @@
             dataType: "json",
             success: function (data) {
                 if(data == ""){
-                    alert('Card list not found!');
+                    alert("Deck not found!");
                     window.location.href = "/";
                 }else{
                     loadPageTemplate(data[cardIndex]);
@@ -138,7 +138,7 @@
     }
 
     const showResult = () => {
-        var resultTemplate = ``;
+        let resultTemplate = ``;
         resultTemplate += `
         <div>
             <p><b>Total of cards:</b> ${progressTotal}</p>
@@ -173,11 +173,11 @@
     }
 
     const toggleCard = () => {
-        $(".card").toggleClass('flipped');
+        $(".card").toggleClass("flipped");
     }
 
     const sendAnswerHistory = (correct,card_id,answer) => {
-        var jsonData = {
+        let jsonData = {
             "correct":correct,
             "card":card_id,
             "user_answer":answer,

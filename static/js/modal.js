@@ -1,6 +1,6 @@
 const openModal = (options, id = null) => {
     $('#modal').modal('show');
-    var modalTemplate = loadModalTemplates(options,id); 
+    let modalTemplate = loadModalTemplates(options,id); 
     $("#modalTitle").html(modalTemplate.title);
     $("#modalDescription").html(modalTemplate.description);
     $("#modalButton").html(modalTemplate.button);
@@ -8,7 +8,7 @@ const openModal = (options, id = null) => {
 }
 
 const loadModalTemplates = (options, id) => {
-    var template = {};
+    let template = {};
         if(options === "addCard"){
             template.title = "Add new card";
             template.button = "<button type='button' class='loadingButtonSubmit btn btn-primary' onclick='addCard("+ id +")'>Create new card</button>";

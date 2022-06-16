@@ -12,13 +12,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
   <link rel="stylesheet" href="{% static 'css/global.css' %}">
   <link rel="stylesheet" href="{% static 'css/assigment.css' %}">
-  <style type="text/css">
-    .center-spinner{
-      position:absolute;
-      top:50%;
-      left:50%;
-    }
-  </style>
   <body>
       <div id="loadingPage" class="center-spinner">
         <div class="spinner-border" role="status">
@@ -81,19 +74,19 @@
       </div>
     </div>
     </body>
-    <script>
-        localStorage.setItem("auth",'{{ auth }}')
-        var authToken = localStorage.getItem("auth");
-
-        mainPageLoad = () => {
-          $("#mainPage").show();
-          $("#loadingPage").hide();
-        }
-    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
-    
+    <script>
+      localStorage.setItem("auth",'{{ auth }}')
+      let authToken = localStorage.getItem("auth");
+
+      mainPageLoad = () => {
+        $("#mainPage").show();
+        $("#loadingPage").hide();
+      }
+    </script>
+
     {% block js %}
     {% endblock js %}
     <script src="{% static 'js/modal.js' %}"></script>

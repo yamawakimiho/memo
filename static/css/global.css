@@ -8,15 +8,21 @@ body {
 }
 
 .goBack {
-    background-color: #04AA6D;
-    color: white;
-    text-decoration: none;
-    display: inline-block;
-    padding: 0.9px 16px 5px; 
-    border-radius: 20%;
-  }
-  
-  .goBack:hover {
-    background-color: green;
-    color: black;
-  }
+  background-color: #04AA6D;
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  padding: 0.9px 16px 5px; 
+  border-radius: 20%;
+}
+
+.goBack:hover {
+  background-color: green;
+  color: black;
+}
+
+.center-spinner{
+  position:absolute;
+  top:50%;
+  left:50%;
+}

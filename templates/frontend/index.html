@@ -40,7 +40,7 @@
   });
 
   const loadPage = () => {
-    var authToken = localStorage.getItem("auth");
+    let authToken = localStorage.getItem("auth");
 
     buttons.innerHTML = `<div style="padding-bottom:10px;">
     <button type="button" class="btn btn-info btn-lg" onClick="openModal('addDeck')">Add deck</button>
@@ -96,7 +96,7 @@ const addDeck = () => {
   deckName = $("#deckName").val();
   deckDescription = $("#deckDescription").val();
 
-  var jsonData = {
+  let jsonData = {
       "name": deckName,
       "description": deckDescription
   };

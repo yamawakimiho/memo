@@ -114,7 +114,7 @@
     }
 
     const getCardSelectorValue = (id) => {
-        var text = {};
+        let text = {};
         text.front = $('#card_id_' + id + ' .cardFrontSelector').text();
         text.back = $('#card_id_' + id + ' .cardBackSelector').val();
 
@@ -132,7 +132,12 @@
         cardFront = $("#cardFront").val();
         cardBack = $("#cardBack").val();
 
-        var jsonData = {
+        if(cardFront == "" || cardBack.length == ""){
+            alert('Please fill out the required field(s)')
+            return;
+        }
+        
+        let jsonData = {
             "front": cardFront,
             "back": cardBack
         };
@@ -172,7 +177,7 @@
             return;
         }
 
-        var jsonData = {
+        let jsonData = {
             "front": cardFront,
             "back": cardBack,
             "card_list": deck_id
