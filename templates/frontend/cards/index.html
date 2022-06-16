@@ -8,7 +8,7 @@
     </div>
     <div class="jumbotron">
         <div class="container">
-            <div class="row align-items-center ">
+            <div class="row align-items-center">
                 <div class="col-md-6">
                     <h1 id="title"></h1>
                     <div id="legend"></div>
@@ -44,6 +44,9 @@
                     loadPageTemplate(data[0]);
                     disableStartButtonIfCardDoesntExists();
                 }
+            },
+            complete: function(){
+                mainPageLoad();
             }
         });
     });
@@ -125,6 +128,7 @@
     }
 
     const updateCard = (card_id) => {
+        isModalLoading(true);
         cardFront = $("#cardFront").val();
         cardBack = $("#cardBack").val();
 
@@ -150,11 +154,16 @@
             },
             error: function(response){
                 alert(response);
+            },
+            complete: function(){
+                isModalLoading(false);
             }
         });
+        
     }
 
     const addCard = (deck_id) => {
+        isModalLoading(true);
         cardFront = $("#cardFront").val();
         cardBack = $("#cardBack").val();
 
@@ -180,11 +189,15 @@
             },
             error: function(response){
                 alert(response);
+            },
+            complete: function(){
+                isModalLoading(false);
             }
         });
     }
 
     const deleteCard = (card_id) => {  
+        isModalLoading(true);
         $.ajax({
             url: "/api/cards/" + card_id + "/",
             type: "DELETE",
@@ -199,11 +212,15 @@
                 }else{
                     alert("Não foi possível apagar o card.")
                 }
+            },
+            complete: function(){
+                isModalLoading(false);
             }
         });
     }
 
     const deleteDeck = (deck_id) => {  
+        isModalLoading(true);
         $.ajax({
             url: "/api/decks/" + deck_id + "/",
             type: "DELETE",
@@ -217,6 +234,9 @@
                 }else{
                     alert("Não foi possível apagar o deck.")
                 }
+            },
+            complete: function(){
+                isModalLoading(false);
             }
         });
     }

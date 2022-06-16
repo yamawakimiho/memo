@@ -49,6 +49,9 @@
                 }else{
                     loadPageTemplate(data[cardIndex]);
                 }
+            },
+            complete: function(){
+                mainPageLoad();
             }
         });
     });

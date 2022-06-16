@@ -7,6 +7,7 @@
     background-color: #343a40;
     height: 100vh;
   }
+
   #login .container #login-row #login-column #login-box {
     margin-top: 120px;
     max-width: 600px;
@@ -38,8 +39,9 @@
   .text-info{
     color: #343a40 !important;
   }
+
 </style>
-{% load static%}
+{% load static %}
 <div id="login">
   <div class="container" >
     <div id="login-row" class="row justify-content-center align-items-center" >
@@ -75,7 +77,13 @@
               {% endif %}
 
               <h3 class="text-center text-info">
+                <div id="loadingSpinner" class="spinner-border text-primary" 
+                role="status" style="display:none">
+                  <span class="sr-only">Loading...</span>
+                </div>
+
                 <input
+                  id="submitButton"
                   type="submit"
                   name="submit"
                   class="btn btn-info btn-md"
@@ -90,5 +98,18 @@
     </div>
   </div>
 </div>
-
 {% endblock content %}
+
+{% block js %}
+<script>
+  window.onload = function(){
+    mainPageLoad();
+  }
+
+  $("#submitButton").click(function() {
+    $("#loadingSpinner").show();
+    $("#submitButton").hide();
+  });
+
+</script>
+{% endblock js %}

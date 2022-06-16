@@ -1,7 +1,6 @@
 const openModal = (options, id = null) => {
     $('#modal').modal('show');
     var modalTemplate = loadModalTemplates(options,id); 
-
     $("#modalTitle").html(modalTemplate.title);
     $("#modalDescription").html(modalTemplate.description);
     $("#modalButton").html(modalTemplate.button);
@@ -12,7 +11,7 @@ const loadModalTemplates = (options, id) => {
     var template = {};
         if(options === "addCard"){
             template.title = "Add new card";
-            template.button = "<button type='button' class='btn btn-primary' onclick='addCard("+ id +")'>Create new card</button>";
+            template.button = "<button type='button' class='loadingButtonSubmit btn btn-primary' onclick='addCard("+ id +")'>Create new card</button>";
             template.description = `
                 <div class="form-group">
                     <label for="front">Front side of the new card (Question)</label>
@@ -30,7 +29,7 @@ const loadModalTemplates = (options, id) => {
                 </div>`;
         }else if(options === "addDeck"){
             template.title = "Add new deck";
-            template.button = "<button type='button' class='btn btn-primary' onclick='addDeck()'>Create new deck</button>";
+            template.button = "<button type='button' class='loadingButtonSubmit btn btn-primary' onclick='addDeck()'>Create new deck</button>";
             template.description = `
                 <div class="form-group">
                     <label for="front">Name of the new deck (should contain at least 2 characters):</label>
@@ -48,7 +47,7 @@ const loadModalTemplates = (options, id) => {
                 </div>`
         }else if(options === "deleteDeck"){
             template.title = "Delete deck confirmation";
-            template.button = "<button type='button' class='btn btn-danger' onclick='deleteDeck("+ id +")'>Confirm Delete</button>";
+            template.button = "<button type='button' class='loadingButtonSubmit btn btn-danger' onclick='deleteDeck("+ id +")'>Confirm Delete</button>";
             template.description = `
                 <div class="form-group">
                     Are you sure you want to delete this deck?
@@ -57,7 +56,7 @@ const loadModalTemplates = (options, id) => {
             cardInfo = getCardSelectorValue(id);
 
             template.title = "Update card";
-            template.button = "<button type='button' class='btn btn-warning' onclick='updateCard("+ id +")'>Confirm Update</button>";
+            template.button = "<button type='button' class='loadingButtonSubmit btn btn-warning' onclick='updateCard("+ id +")'>Confirm Update</button>";
             template.description = `
                 <div class="form-group">
                 <label for="front">Front side of the new card (Question)</label>
@@ -98,4 +97,13 @@ returnIcon = (isCorrect) => {
     return (isCorrect) ? '✔️' : '❌';
 };
 
-
+isModalLoading = (isLoading) => {
+    console.log($('.loadingButtonSubmit'));
+      if(isLoading){
+        $('#loadingButton').show();
+        $('.loadingButtonSubmit').hide();
+      }else{
+        $('#loadingButton').hide();
+        $('.loadingButtonSubmit').show();
+      }
+  }

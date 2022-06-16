@@ -26,11 +26,12 @@
             </div>
           </div>
           <div class="container">
-            <div class="row" id="deck_list"></div>
+            <div class="row" id="deckList"></div>
           </div>
       </div>
     </div>
 </div>
+
 {% endblock content %} 
 {% block js %}
 <script>
@@ -42,8 +43,8 @@
     var authToken = localStorage.getItem("auth");
 
     buttons.innerHTML = `<div style="padding-bottom:10px;">
-          <button type="button" class="btn btn-info btn-lg" onClick="openModal('addDeck')">Add deck</button>
-      </div>`;
+    <button type="button" class="btn btn-info btn-lg" onClick="openModal('addDeck')">Add deck</button>
+    </div>`;
 
     $.ajax({
         url: "/api/decks/",
@@ -54,27 +55,30 @@
         dataType: "json",
         success: function (data) {
           for (let index = 0; index < data.length; index++){
-            $("#deck_list").append(loadDecks(data[index]));
+            $("#deckList").append(loadDecks(data[index]));
           }
           decksLoaded();
         },
+        complete: function(){
+          mainPageLoad();
+        }
     });
   }
 
   const loadDecks = (data) => { 
     card = ` 
     <div class="col-md-4">
-    <div class="card text-center any-card" 
-    style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;"
-    id=${data.id}>
-    <div class="card-body">
-    <h4 class="card-title">${data.name}</h5>
-    <p class="card-text">Created by: ${data.username}</p>
-    <p class="card-text text-ellipsis">${data.description}</p>
-    </div>
-    <div class="card-footer text-muted">
-    <p class="card-text">Total cards: ${data.cards.length}</p>
-    </div>
+      <div class="card text-center any-card" 
+      style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;"
+      id=${data.id}>
+        <div class="card-body">
+      <h4 class="card-title">${data.name}</h5>
+      <p class="card-text">Created by: ${data.username}</p>
+      <p class="card-text text-ellipsis">${data.description}</p>
+      </div>
+      <div class="card-footer text-muted">
+      <p class="card-text">Total cards: ${data.cards.length}</p>
+      </div>
     </div>`;
   return card;
 }
@@ -87,37 +91,42 @@ const decksLoaded = () => {
 }
 
 const addDeck = () => {
-        deckName = $("#deckName").val();
-        deckDescription = $("#deckDescription").val();
+  isModalLoading(true);
+  
+  deckName = $("#deckName").val();
+  deckDescription = $("#deckDescription").val();
 
-        var jsonData = {
-            "name": deckName,
-            "description": deckDescription
-        };
-        
-        $.ajax({
-            url: "/api/decks/",
-            type: "POST",
-            beforeSend: function(request) {
-                request.setRequestHeader("Authorization", "Token " + authToken);
-            },
-            data: JSON.stringify(jsonData),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                $('#modal').modal('hide');
-                $("#deck_list").append(loadDecks(response));
-                decksLoaded();
-            },
-            error: function(response){
-              if(response.status == 0){
-                alert("The new deck should contain at least 2 characters");
-              }else{
-                alert("Deck was not created. Try again.")
-              }
-            }
-        });
-    }
+  var jsonData = {
+      "name": deckName,
+      "description": deckDescription
+  };
+
+  $.ajax({
+      url: "/api/decks/",
+      type: "POST",
+      beforeSend: function(request) {
+          request.setRequestHeader("Authorization", "Token " + authToken);
+      },
+      data: JSON.stringify(jsonData),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (response) {
+          $('#modal').modal('hide');
+          $("#deckList").append(loadDecks(response));
+          decksLoaded();
+      },
+      error: function(response){
+        if(response.status == 0){
+          alert("The new deck should contain at least 2 characters");
+        }else{
+          alert("Deck was not created. Try again.")
+        }
+      },
+      complete: function(){
+        isModalLoading(false);
+      }
+  });
+}
 
 </script>
 {% endblock js %}
