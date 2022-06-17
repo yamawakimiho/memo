@@ -47,7 +47,7 @@
                     alert("Deck not found!");
                     window.location.href = "/";
                 }else{
-                    loadPageTemplate(data[cardIndex]);
+                    loadPageTemplate(data);
                 }
             },
             complete: function(){
@@ -196,10 +196,8 @@
             data: JSON.stringify(jsonData),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function (response) {
-            },
-            error: function(response){
-                console.log("response");
+            error: function(){
+                alert('Card answer was not sent')
             }
         });
     }

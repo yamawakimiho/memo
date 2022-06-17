@@ -98,7 +98,6 @@ returnIcon = (isCorrect) => {
 };
 
 isModalLoading = (isLoading) => {
-    console.log($('.loadingButtonSubmit'));
       if(isLoading){
         $('#loadingButton').show();
         $('.loadingButtonSubmit').hide();
