@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('memo', '0003_alter_card_card_list_alter_cardanswerhistory_card'),
+        ("memo", "0003_alter_card_card_list_alter_cardanswerhistory_card"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='card',
-            options={'verbose_name': 'Card', 'verbose_name_plural': 'Cards'},
+            name="card",
+            options={"verbose_name": "Card", "verbose_name_plural": "Cards"},
         ),
         migrations.AlterModelOptions(
-            name='cardlist',
-            options={'verbose_name_plural': 'Cards List'},
+            name="cardlist",
+            options={"verbose_name_plural": "Cards List"},
         ),
     ]

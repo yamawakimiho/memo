@@ -41,8 +41,8 @@
                     alert('Deck not found!');
                     window.location.href = "/";
                 }else{
-                    loadPageTemplate(data[0]);
-                    disableStartButtonIfCardDoesntExists();
+                    loadPageTemplate(data);
+                    disableStartButtonIfCardDoesntExist();
                 }
             },
             complete: function(){
@@ -121,7 +121,7 @@
         return text;
     }
 
-    const disableStartButtonIfCardDoesntExists = () => {
+    const disableStartButtonIfCardDoesntExist = () => {
         ($("#cards").children().length > 0) ?  
         $('#startButton').prop("disabled", false) : 
         $('#startButton').prop("disabled", true);
@@ -158,7 +158,7 @@
 
             },
             error: function(response){
-                alert(response);
+                alert("You're not the owner of this card. Unable to update.");
             },
             complete: function(){
                 isModalLoading(false);
@@ -195,7 +195,7 @@
             success: function (response) {
                 $('#modal').modal('hide');
                 $("#cards").append(loadCardTemplate(response));
-                disableStartButtonIfCardDoesntExists();
+                disableStartButtonIfCardDoesntExist();
             },
             error: function(response){
                 alert(response);
@@ -218,10 +218,13 @@
             success: function (response) {
                 if(response.status == 1){
                     document.getElementById("card_id_" + card_id).remove();
-                    disableStartButtonIfCardDoesntExists();
+                    disableStartButtonIfCardDoesntExist();
                 }else{
-                    alert("Unable to delete the card. Try again.")
+                    alert("You're not the owner of this card. Unable to delete.")
                 }
+            },
+            error: function(response){
+                alert("Unable to delete the card. Try again.");
             },
             complete: function(){
                 isModalLoading(false);
@@ -239,10 +242,13 @@
             },
             dataType: "json",
             success: function (response) {
-                if(response.status == 1){
-                    window.location.href = "/";
-                }else{
-                    alert("Unable to delete the deck. Try again.")
+                window.location.href = "/";
+            },
+            error: function (response){
+                if(response.status == 400){
+                    alert("You're not the owner of this deck. Unable to delete.");
+                }else{  
+                    alert('Unable to delete the deck. Try again.');
                 }
             },
             complete: function(){
@@ -250,8 +256,6 @@
             }
         });
     }
-
-
 
 </script>
 {% endblock %}

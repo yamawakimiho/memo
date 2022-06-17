@@ -10,49 +10,60 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('memo', '0001_initial'),
+        ("memo", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cardanswerhistory',
-            name='active',
-            field=models.BooleanField(default=True, verbose_name='Active'),
+            model_name="cardanswerhistory",
+            name="active",
+            field=models.BooleanField(default=True, verbose_name="Active"),
         ),
         migrations.AddField(
-            model_name='cardanswerhistory',
-            name='owner',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='auth.user', verbose_name='Owner'),
+            model_name="cardanswerhistory",
+            name="owner",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="auth.user",
+                verbose_name="Owner",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='cardanswerhistory',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True, verbose_name='Updated At'),
+            model_name="cardanswerhistory",
+            name="updated_at",
+            field=models.DateTimeField(auto_now=True, verbose_name="Updated At"),
         ),
         migrations.AlterField(
-            model_name='card',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='Created At'),
+            model_name="card",
+            name="created_at",
+            field=models.DateTimeField(auto_now_add=True, verbose_name="Created At"),
         ),
         migrations.AlterField(
-            model_name='card',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True, verbose_name='Updated At'),
+            model_name="card",
+            name="updated_at",
+            field=models.DateTimeField(auto_now=True, verbose_name="Updated At"),
         ),
         migrations.AlterField(
-            model_name='cardlist',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='Created At'),
+            model_name="cardlist",
+            name="created_at",
+            field=models.DateTimeField(auto_now_add=True, verbose_name="Created At"),
         ),
         migrations.AlterField(
-            model_name='cardlist',
-            name='name',
-            field=models.CharField(max_length=100, validators=[django.core.validators.MinLengthValidator(2, 'Card name must be grater than 2 characters')]),
+            model_name="cardlist",
+            name="name",
+            field=models.CharField(
+                max_length=100,
+                validators=[
+                    django.core.validators.MinLengthValidator(
+                        2, "Card name must be grater than 2 characters"
+                    )
+                ],
+            ),
         ),
         migrations.AlterField(
-            model_name='cardlist',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True, verbose_name='Updated At'),
+            model_name="cardlist",
+            name="updated_at",
+            field=models.DateTimeField(auto_now=True, verbose_name="Updated At"),
         ),
     ]
