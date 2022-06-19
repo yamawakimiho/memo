@@ -14,7 +14,7 @@ class DecksAPIView(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CardListSerializer
-    queryset = CardList.objects.all()
+    queryset = CardList.objects.all().order_by("-id")
 
     def destroy(self, request, *args, **kwargs):
         decks = self.get_object()
@@ -30,22 +30,19 @@ class DecksAPIView(viewsets.ModelViewSet):
         serializer_class.save(owner=self.request.user)
 
 
-class CardAnswersAPIView(generics.ListCreateAPIView, generics.CreateAPIView):
+class CardAnswersAPIView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-    queryset = CardAnswerHistory.objects.all()
-    serializer_class = CardAnswerHistorySerializer
-
-    def get_queryset(self):
-        if self.kwargs.get("pk"):
-            return self.queryset.filter(card_id=self.kwargs.get("pk"))
-        return self.queryset.all()
-
-
-class CardAnswerAPIView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, pk):
+        if pk > 0:
+            cards = CardAnswerHistory.objects.filter(
+                card_id=self.kwargs.get("pk")
+            ).order_by("-id")
+            serializer = CardAnswerHistorySerializer(
+                cards, many=True, context={"request": request}
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = CardAnswerHistorySerializer(
@@ -63,8 +60,6 @@ class CardsAPIView(APIView):
 
     def post(self, request):
         serializer = CardSerializer(data=request.data, context={"request": request})
-
-        print(serializer)
         if serializer.is_valid():
             serializer.save(owner_id=request.user.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

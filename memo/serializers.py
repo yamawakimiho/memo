@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import CardAnswerHistory, CardList, Card
-from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class FilteredListSerializer(serializers.ListSerializer):
@@ -18,7 +16,7 @@ class CardAnswerHistorySerializer(serializers.ModelSerializer):
             "id",
             "user_answer",
             "correct",
-            "updated_at",
+            "created_at",
             "card",
         )
 

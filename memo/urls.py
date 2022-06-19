@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CardsAPIView, DecksAPIView, CardAnswersAPIView, CardAnswerAPIView
+from .views import CardsAPIView, DecksAPIView, CardAnswersAPIView
 from memo.views import DecksAPIView
 from rest_framework.routers import DefaultRouter
 
@@ -15,5 +15,5 @@ urlpatterns = [
     path(
         "cards/<int:pk>/card_answer/", CardAnswersAPIView.as_view(), name="answers_card"
     ),
-    path("card_answer/", CardAnswerAPIView.as_view(), name="answer_card"),
+    path("card_answer/", CardAnswersAPIView.as_view(), name="answer_card"),
 ]
