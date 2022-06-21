@@ -1,10 +1,16 @@
-version: "3.0"
+version: '3'
 services:
-    lb:
-        image: postgres:10.4
-        container_name: postgres
-        env_file: .env
-        volumes:
-            - "./srv/docker/postgres/:/var/lib/postgresql/data"
-        ports:
-            - "50001:5432"
+  db_memo:
+    image: postgres:latest
+    ports:
+      - "50001:5432"
+    volumes:
+      - "./srv/docker/postgres/:/var/lib/postgresql/data"
+    env_file: .env
+
+  redis_memo:
+    image: redis:alpine
+    ports:
+      - "50002:6379"
+    volumes:
+        - "./srv/docker/redis/:/data/"

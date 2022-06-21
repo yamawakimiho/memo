@@ -22,7 +22,7 @@ class CardTest(APITestCase):
         self.assertTrue(created)
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
-        self.url = config("LOCAL_HOST_VAR") + "/api/cards/"
+        self.url = config("HOST_VAR") + "/api/cards/"
 
         self.deck = baker.make("CardList", owner=self.user)
         self.data = {"front": "Testing", "back": "Testing2", "card_list": self.deck.id}
