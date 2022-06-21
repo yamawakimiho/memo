@@ -23,8 +23,8 @@ class CardAnswerHistoryTest(APITestCase):
         self.assertTrue(created)
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
-        self.url = config("LOCAL_HOST_VAR") + "/api/cards/"
-        self.url_create = config("LOCAL_HOST_VAR") + "/api/card_answer/"
+        self.url = config("HOST_VAR") + "/api/cards/"
+        self.url_create = config("HOST_VAR") + "/api/card_answer/"
 
         self.deck = baker.make("CardList", owner=self.user)
         self.card = baker.make("Card", owner=self.user, card_list=self.deck)
