@@ -54,7 +54,7 @@
     function loadPageTemplate(data){
         title.innerHTML = `<a href="{% url 'accounts:index' %}">
             <div class="goBack" id="goBack">&#8249;</div></a> ` + data.name;
-        legend.innerHTML = '<p><b>Created at:</b> ' + data.created_at + ' - <b>by</b> '  + data.username + '</p><p>' + data.description + '</p>';
+        legend.innerHTML = '<p><b>Created at:</b> ' + data.created_at + '<p>' + data.description + '</p>';
         buttons.innerHTML = `<div style="padding-bottom:10px;">
             <a href="{% url 'memo_front:assigment' deck_id=deck_id  %}"><button type="button" class="btn btn-success btn-lg" style="margin-right:10px" id="startButton">Start</button></a>
             <button type="button" class="btn btn-info btn-lg" onClick="openModal('addCard',${data.id})">Add card</button>
@@ -76,7 +76,7 @@
                 <div class="card-body">
                     <h2 class="card-title cardFrontSelector">${data.front}</h2>
                     <input type="hidden" class="cardBackSelector" value="${data.back}">
-                    <p class="card-text">Created by: ${data.username}</p>
+                    <p class="card-text">Created at: ${data.created_at}</p>
                 </div>
             <div class="card-footer text-muted">
                 <button type="button" class="btn btn-outline-danger btn-sm" 
@@ -95,8 +95,8 @@
             url: "/api/cards/" + card_id + "/card_answer/",
             type: "GET",
             beforeSend: function(request) {
-                    request.setRequestHeader("Authorization", "Token " + authToken);
-                },
+                request.setRequestHeader("Authorization", "Token " + authToken);
+            },
             dataType: "json",
             success: function (data) {
                 let result = "";
@@ -157,8 +157,8 @@
                 $('#card_id_' + card_id + ' .cardBackSelector').val(cardBack)
 
             },
-            error: function(response){
-                alert("You're not the owner of this card. Unable to update.");
+            error: function(){
+                alert('Unable to update. Try again.');
             },
             complete: function(){
                 isModalLoading(false);
@@ -198,7 +198,7 @@
                 disableStartButtonIfCardDoesntExist();
             },
             error: function(response){
-                alert(response);
+                console.log(response);
             },
             complete: function(){
                 isModalLoading(false);
@@ -216,12 +216,8 @@
             },
             dataType: "json",
             success: function (response) {
-                if(response.status == 1){
-                    document.getElementById("card_id_" + card_id).remove();
-                    disableStartButtonIfCardDoesntExist();
-                }else{
-                    alert("You're not the owner of this card. Unable to delete.")
-                }
+                document.getElementById("card_id_" + card_id).remove();
+                disableStartButtonIfCardDoesntExist();
             },
             error: function(response){
                 alert("Unable to delete the card. Try again.");
@@ -245,11 +241,7 @@
                 window.location.href = "/";
             },
             error: function (response){
-                if(response.status == 400){
-                    alert("You're not the owner of this deck. Unable to delete.");
-                }else{  
-                    alert('Unable to delete the deck. Try again.');
-                }
+                alert('Unable to delete the deck. Try again.');
             },
             complete: function(){
                 isModalLoading(false);

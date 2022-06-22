@@ -5,16 +5,20 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from rest_framework import status
 from rest_framework.views import APIView, Response
-from rest_framework import generics, permissions
+from rest_framework import permissions
 from .models import Card, CardAnswerHistory, CardList
 from .serializers import CardListSerializer, CardSerializer, CardAnswerHistorySerializer
+import datetime
 
 
 class DecksAPIView(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CardListSerializer
-    queryset = CardList.objects.all().order_by("-id")
+    queryset = CardList.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user).order_by("-id")
 
     def destroy(self, request, *args, **kwargs):
         decks = self.get_object()
@@ -22,9 +26,12 @@ class DecksAPIView(viewsets.ModelViewSet):
             decks.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        kwargs["partial"] = True
+        request.data["updated_at"] = datetime.datetime.now()
+        return super().update(request, *args, **kwargs)
 
     def perform_create(self, serializer_class):
         serializer_class.save(owner=self.request.user)
@@ -36,22 +43,16 @@ class CardAnswersAPIView(APIView):
 
     def get(self, request, pk):
         if pk > 0:
-            cards = CardAnswerHistory.objects.filter(
-                card_id=self.kwargs.get("pk")
-            ).order_by("-id")
-            serializer = CardAnswerHistorySerializer(
-                cards, many=True, context={"request": request}
-            )
+            cards = CardAnswerHistory.objects.filter(card_id=pk).order_by("-id")
+            serializer = CardAnswerHistorySerializer(cards, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = CardAnswerHistorySerializer(
-            data=request.data, context={"request": request}
-        )
+        serializer = CardAnswerHistorySerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner_id=request.user.id)
+            serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CardsAPIView(APIView):
@@ -59,25 +60,26 @@ class CardsAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        serializer = CardSerializer(data=request.data, context={"request": request})
+        serializer = CardSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner_id=request.user.id)
+            serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors)
 
     def put(self, request, pk):
-        cards = get_object_or_404(Card, id=pk, owner_id=request.user.id)
+        cards = get_object_or_404(Card, id=pk, owner=request.user)
         request.data["card_list"] = cards.card_list.id
+        request.data["updated_at"] = datetime.datetime.now()
         serializer = CardSerializer(cards, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"status": "1"}, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         try:
-            cards = Card.objects.get(owner_id=request.user.id, id=pk)
+            cards = Card.objects.get(owner=request.user, id=pk)
             cards.delete()
-            return Response({"status": "1"}, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except:
-            return Response({"status": "0"}, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_400_BAD_REQUEST)

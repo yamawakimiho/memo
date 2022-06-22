@@ -43,12 +43,11 @@
             },
             dataType: "json",
             success: function (data) {
-                if(data == ""){
-                    alert("Deck not found!");
-                    window.location.href = "/";
-                }else{
-                    loadPageTemplate(data);
-                }
+                loadPageTemplate(data);
+            },
+            error: function(){
+                alert("Deck not found!");
+                window.location.href = "/";
             },
             complete: function(){
                 mainPageLoad();
@@ -83,8 +82,8 @@
     }
 
     const progressBar = () => {
-            $("#barSuccess").css("width", (100 * progressSuccess) / progressTotal + "%");
-            $("#barFailure").css("width", (100 * progressFailure) / progressTotal + "%");
+        $("#barSuccess").css("width", (100 * progressSuccess) / progressTotal + "%");
+        $("#barFailure").css("width", (100 * progressFailure) / progressTotal + "%");
     }
     
     const loadPageTemplate = (data) => {

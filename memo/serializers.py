@@ -2,15 +2,8 @@ from rest_framework import serializers
 from .models import CardAnswerHistory, CardList, Card
 
 
-class FilteredListSerializer(serializers.ListSerializer):
-    def to_representation(self, data):
-        data = data.filter(owner_id=self.context["request"].user.id)
-        return super(FilteredListSerializer, self).to_representation(data)
-
-
 class CardAnswerHistorySerializer(serializers.ModelSerializer):
     class Meta:
-        list_serializer_class = FilteredListSerializer
         model = CardAnswerHistory
         fields = (
             "id",
@@ -22,7 +15,6 @@ class CardAnswerHistorySerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="owner.username", read_only=True)
     card_history = CardAnswerHistorySerializer(
         many=True, read_only=True, source="card_answers"
     )
@@ -34,7 +26,6 @@ class CardSerializer(serializers.ModelSerializer):
             "front",
             "back",
             "active",
-            "username",
             "card_list",
             "created_at",
             "updated_at",
@@ -43,7 +34,6 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class CardListSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="owner.username", read_only=True)
     cards = CardSerializer(many=True, read_only=True)
 
     class Meta:
@@ -53,6 +43,7 @@ class CardListSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "cards",
-            "username",
             "created_at",
+            "updated_at",
+            "active",
         )

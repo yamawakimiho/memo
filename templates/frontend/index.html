@@ -27,6 +27,7 @@
           </div>
           <div class="container">
             <div class="row" id="deckList"></div>
+            <div class="row" id="welcome"></div>
           </div>
       </div>
     </div>
@@ -54,9 +55,15 @@
         },
         dataType: "json",
         success: function (data) {
+
+        if(data.length > 0){
           for (let index = 0; index < data.length; index++){
-            $("#deckList").append(loadDecks(data[index]));
+            console.log(data)
+            $("#deckList").append(DecksCardTemplate(data[index]));
           }
+        }else{
+          $("#welcome").append(welcomeTemplate);
+        }
           decksLoaded();
         },
         complete: function(){
@@ -65,29 +72,23 @@
     });
   }
 
-  const loadDecks = (data) => { 
-    card = ` 
-    <div class="col-md-4">
-      <div class="card text-center any-card" 
-      style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;"
-      id=${data.id}>
-        <div class="card-body">
-      <h4 class="card-title">${data.name}</h5>
-      <p class="card-text">Created by: ${data.username}</p>
-      <p class="card-text text-ellipsis">${data.description}</p>
-      </div>
-      <div class="card-footer text-muted">
-      <p class="card-text">Total cards: ${data.cards.length}</p>
-      </div>
-    </div>`;
-  return card;
-}
-
 const decksLoaded = () => {
-  $( ".any-card" ).click(function() {
+  $( ".any-card" ).click(function () {
     let id = $(this).attr('id');
         window.location.href = "/cards/list/" + id + "/";
   });
+
+  $( ".switch_deck" ).click(function () {
+    let id = $(this).attr('id').slice(7);
+
+    if($(this).prop('checked') === true){
+      $("label[for='switch_" + id + "']").text("Reminder: ON");
+      updateDeckStatus(id, true)
+    }else{
+      $("label[for='switch_" + id + "']").text("Reminder: OFF");
+      updateDeckStatus(id, false)
+    }
+  }); 
 }
 
 const addDeck = () => {
@@ -112,20 +113,73 @@ const addDeck = () => {
       dataType: "json",
       success: function (response) {
           $('#modal').modal('hide');
-          $("#deckList").append(loadDecks(response));
+          $("#deckList").append(DecksCardTemplate(response))
           decksLoaded();
+          $('#welcome').fadeOut();
       },
       error: function(response){
-        if(response.status == 0){
-          alert("The new deck should contain at least 2 characters");
-        }else{
-          alert("Deck was not created. Try again.")
-        }
+          alert("Deck was not created. Insert at least 2 characters or try again.")
       },
       complete: function(){
         isModalLoading(false);
       }
   });
+}
+
+const updateDeckStatus = (id, isActivated) => {
+  let jsonData = {
+      "active": isActivated
+  };
+
+  $.ajax({
+      url: "/api/decks/" + id + "/",
+      type: "PATCH",
+      beforeSend: function(request) {
+          request.setRequestHeader("Authorization", "Token " + authToken);
+      },
+      data: JSON.stringify(jsonData),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      error: function(response){
+          alert("Unable to update the reminder. Try again.")
+      }
+  });
+}
+
+const welcomeTemplate = () => {
+    return `<div class="col-md-12 alert alert-info" role="alert" style="padding-top:20px; margin-top:20px">
+                <h2>Welcome to memo!</h2>
+                <br>
+                <p>Push <b>Add deck</b> button to create a new deck.</p>
+                <br>
+                <p>When you create a deck, by default, the notification will be set to <b>ON</b>.</p>
+                <p>Set a reminder to <b>ON</b> if you want to get a daily email to remind you to do your assignment with the selected deck. <p>
+                <p>Turning the reminder to <b>OFF</b>, the deck won't be listed in the reminder email.</p>
+            </div>`;
+  }
+
+  const DecksCardTemplate = (data) => { 
+    return ` 
+    <div class="col-md-4">
+      <div class="card text-center" 
+      style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;">
+        <div class="card-body any-card" 
+      id=${data.id}>
+      <h4 class="card-title">${data.name}</h5>
+      <p class="card-text">Created at: ${data.created_at}</p>
+      <p class="card-text text-ellipsis">${data.description}</p>
+      </div>
+      
+      <div class="card-footer text-muted">
+      <p class="card-text">Total cards: ${data.cards.length}</p>
+
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input switch_deck" id="switch_${data.id}" 
+        ${(data.active) ? 'checked' : ''}>
+        <label class="custom-control-label" for="switch_${data.id}">Reminder: ${data.active ? 'ON' : 'OFF'}</label>
+      </div>
+      </div>
+    </div>`;
 }
 
 </script>

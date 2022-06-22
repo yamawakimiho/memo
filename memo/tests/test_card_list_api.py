@@ -1,3 +1,4 @@
+import json
 from rest_framework.authtoken.models import Token
 from memo.models import CardList
 from decouple import config
@@ -18,10 +19,6 @@ class CardListTest(APITestCase):
             username="user", email="user@user.com", password="123"
         )
 
-        self.user2 = self.User.objects.create_superuser(
-            username="user2", email="user2@user.com", password="123"
-        )
-
         token, created = Token.objects.get_or_create(user=self.user)
         self.assertTrue(created)
 
@@ -29,7 +26,11 @@ class CardListTest(APITestCase):
         self.url = config("HOST_VAR") + "/api/decks/"
 
         self.deck = baker.make("CardList", owner=self.user, description="testing")
-        self.deck2 = baker.make("CardList", owner=self.user2, description="testing2")
+        self.deck2 = baker.make("CardList", owner=self.user, description="testing")
+
+        self.created_at = datetime.datetime.astimezone(self.deck.created_at).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
 
     def test_created_two_decks(self):
         self.assertEqual(2, CardList.objects.count())
@@ -41,13 +42,9 @@ class CardListTest(APITestCase):
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
 
     def test_get_decks_success(self):
-        response = self.client.get(self.url)
+        response = self.client.get(self.url, format="json")
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(2, len(response.data))
-
-        created_at = datetime.datetime.astimezone(self.deck.created_at).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
 
         expected_data = [
             {
@@ -55,16 +52,18 @@ class CardListTest(APITestCase):
                 "name": self.deck2.name,
                 "description": self.deck2.description,
                 "cards": [],
-                "username": self.user2.username,
-                "created_at": created_at,
+                "created_at": self.created_at,
+                "updated_at": self.created_at,
+                "active": self.deck2.active,
             },
             {
                 "id": self.deck.id,
                 "name": self.deck.name,
                 "description": self.deck.description,
                 "cards": [],
-                "username": self.user.username,
-                "created_at": created_at,
+                "created_at": self.created_at,
+                "updated_at": self.created_at,
+                "active": self.deck.active,
             },
         ]
 
@@ -80,10 +79,6 @@ class CardListTest(APITestCase):
         response = self.client.delete(self.url + str(self.deck.id) + "/")
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
-    def test_delete_deck_created_by_another_user_fail(self):
-        response = self.client.delete(self.url + str(self.deck2.id) + "/")
-        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
-
     def test_create_deck_success(self):
 
         data = {"name": "DeckTest", "description": "TestingDeck"}
@@ -91,3 +86,41 @@ class CardListTest(APITestCase):
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(3, CardList.objects.count())
+
+    def test_patch_deck_change_active_status_false(self):
+        data = {"active": False}
+        response = self.client.patch(
+            self.url + str(self.deck.id) + "/", data, format="json"
+        )
+
+        expected_data = {
+            "id": self.deck.id,
+            "name": self.deck.name,
+            "description": self.deck.description,
+            "cards": [],
+            "created_at": self.created_at,
+            "updated_at": self.created_at,
+            "active": False,
+        }
+
+        self.assertEqual(expected_data, response.data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+    def test_patch_deck_change_active_status_true(self):
+        data = {"active": True}
+        response = self.client.patch(
+            self.url + str(self.deck.id) + "/", data, format="json"
+        )
+
+        expected_data = {
+            "id": self.deck.id,
+            "name": self.deck.name,
+            "description": self.deck.description,
+            "cards": [],
+            "created_at": self.created_at,
+            "updated_at": self.created_at,
+            "active": True,
+        }
+
+        self.assertEqual(expected_data, response.data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)

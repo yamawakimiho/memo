@@ -38,12 +38,9 @@ class CardAnswerHistoryTest(APITestCase):
         self.card_answer = baker.make(
             "CardAnswerHistory", card=self.card, owner=self.user
         )
-        self.card_answer2 = baker.make(
-            "CardAnswerHistory", card=self.card, owner=self.user2
-        )
 
     def test_created_two_card_answers(self):
-        self.assertEqual(2, CardAnswerHistory.objects.count())
+        self.assertEqual(1, CardAnswerHistory.objects.count())
 
     def test_get_card_answer_require_authorization(self):
         self.client.credentials()
@@ -76,7 +73,7 @@ class CardAnswerHistoryTest(APITestCase):
 
         card_history_id = response.data["id"]
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        self.assertEqual(3, CardAnswerHistory.objects.count())
+        self.assertEqual(2, CardAnswerHistory.objects.count())
         self.assertEqual(
             CardAnswerHistory.objects.get(id=card_history_id).correct,
             self.data["correct"],
