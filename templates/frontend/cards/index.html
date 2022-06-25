@@ -52,7 +52,7 @@
     });
 
     function loadPageTemplate(data){
-        title.innerHTML = `<a href="{% url 'accounts:index' %}">
+        title.innerHTML = `<a href="{% url 'index' %}">
             <div class="goBack" id="goBack">&#8249;</div></a> ` + data.name;
         legend.innerHTML = '<p><b>Created at:</b> ' + data.created_at + '<p>' + data.description + '</p>';
         buttons.innerHTML = `<div style="padding-bottom:10px;">
