@@ -18,42 +18,52 @@
                                 style="height: 30px; margin-bottom: 10px"
                                 src="{% static 'img/logo.png' %}"
                             />
-                            {% if form.errors %}
-                            <p>Invalid username/password</p>
-                            {% endif %}
+
+                            <h1>Create new account</h1>
                         </div>
                         <div class="form-group">
-                            <label for="username" class="text-info"
+                            <label for="email" class="text-info"
                                 >Username:</label
                             ><br />
                             <input
                                 type="text"
                                 name="username"
-                                id="username"
+                                id="email"
                                 class="form-control"
                             />
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="text-info"
+                            <label for="email" class="text-info">Email:</label
+                            ><br />
+                            <input
+                                type="text"
+                                name="email"
+                                id="email"
+                                class="form-control"
+                            />
+                            <label for="email" class="text-info"
                                 >Password:</label
                             ><br />
                             <input
                                 type="password"
-                                name="password"
-                                id="password"
+                                name="password1"
+                                id="email"
+                                class="form-control"
+                            />
+                            <label for="email" class="text-info"
+                                >Confirm password:</label
+                            ><br />
+                            <input
+                                type="password"
+                                name="password2"
+                                id="email"
                                 class="form-control"
                             />
                         </div>
+
+                        {{ form.errors }}
+
                         <div class="form-group">
                             <p>
-                                <a href="{% url 'password_reset' %}"
-                                    >Forgot password?</a
-                                >
-                            </p>
-                            <p>
-                                <a href="{% url 'register' %}"
-                                    >Create new account</a
-                                >
+                                <a href="{% url 'login' %}"><< Back to Login</a>
                             </p>
 
                             <h3 class="text-center text-info">
@@ -93,3 +103,8 @@
     });
 </script>
 {% endblock js %}
+
+<form method="POST">
+    {% csrf_token %} {{ form.as_p }}
+    <input type="submit" value="Send me instructions!" />
+</form>
