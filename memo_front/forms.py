@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 # https://docs.djangoproject.com/en/4.0/topics/auth/default/
 

@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from decouple import config
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -146,3 +147,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
+
+CELERY_BEAT_SCHEDULE = {
+      'send-email-every-midnight': {
+        'task': 'project.tasks.send_email_task',
+        'schedule': crontab(minute=0, hour=0),
+        # 'schedule': 30.0,
+        'options': {
+            'expires': 15.0,
+        },
+    },
+}

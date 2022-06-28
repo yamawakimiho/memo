@@ -1,4 +1,5 @@
 # Memo Django
+
 <p align="center">
 <a href="https://memo-memo.herokuapp.com/" target="_blank"><img src="readme_assets/memo-logo.png" width="50%"></a>
 </p>
@@ -20,17 +21,19 @@
       <a href="#getting-started">Getting Started</a>
         <ul>
         <li><a href="#local-environment">Local Environment</a></li>
+        <li><a href="#using-celery">Using celery</a></li>
       </ul>
     </li>
 </details>
 
 ## About the memo
 
-Memo is a flashcard-like web application built with Django, Django Rest Framework, jQuery and Bootstrap. You can create your own deck and also create flashcards with about contents you want to learn. The object of this application is to make learning interesting and fun. 
+Memo is a flashcard-like web application built with Django, Django Rest Framework, jQuery and Bootstrap. You can create your own deck and also create flashcards with about contents you want to learn. The object of this application is to make learning interesting and fun.
 
 You can check the deployed project [here](https://memo-memo.herokuapp.com/).
 
-Use the login credencial below to access the web application: 
+Use the login credencial below to access the web application:
+
 ```
   Username: visitor
   Password: v1s1t0r@123
@@ -64,10 +67,10 @@ Use the login credencial below to access the web application:
 
 ```sh
 root ┐
-     ├ accounts (login) 
-     ├ memo (api) 
-     ├ memo_front (app) 
-     ├ project (core of memo) 
+     ├ accounts (login)
+     ├ memo (api)
+     ├ memo_front (app)
+     ├ project (core of memo)
      ├ static
      ├ templates ┐
      └ ...       ├ frontend
@@ -78,9 +81,9 @@ root ┐
 
 Before the setup, make sure you have:
 
-- Python 3.9
-- Pip
-- Docker compose
+-   Python 3.9
+-   Pip
+-   Docker compose
 
 #### Clone this repository:
 
@@ -113,6 +116,7 @@ $ workon venv
 ```
 
 ### Update pip
+
 ```sh
 $ pip install -U pip setuptools wheel pip-tools
 ```
@@ -128,16 +132,47 @@ $ pip-sync
 Make a copy of `.env_example` file and named it to `.env`
 
 Use the command below to build, create and start the docker compose:
+
 ```sh
 $ docker-compose up
 ```
-Migrate your model: 
+
+Migrate your model:
+
 ```sh
 $ python manage.py migrate
 ```
 
-Run the localhost (make sure docker is up in your localhost!): 
+Run the localhost (make sure docker is up in your localhost!):
 
 ```sh
 $ python manage.py runserver
+```
+
+### Using Celery
+
+You can use Celery locally by using this command:
+
+```sh
+$  celery -A project  worker -l info
+```
+
+If you want to activate task manually, run:
+
+```sh
+$  python manage.py shell
+Python 3.9.7 (default, Sep 10 2021, 14:59:43)
+[GCC 11.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from project.tasks import send_email_task
+>>> send_email_task()
+>>> <AsyncResult: 7e7b290-7dbb-4f9b-81b0-da917e083c14>
+```
+
+Or run periodic scheduling with celery beat.
+** You can change the config in settings.py **
+
+```sh
+$  celery -A project.celery beat
 ```
