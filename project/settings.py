@@ -152,7 +152,6 @@ CELERY_BEAT_SCHEDULE = {
       'send-email-every-midnight': {
         'task': 'project.tasks.send_email_task',
         'schedule': crontab(minute=0, hour=0),
-        # 'schedule': 30.0,
         'options': {
             'expires': 15.0,
         },

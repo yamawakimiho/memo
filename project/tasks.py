@@ -1,7 +1,7 @@
 from celery import shared_task
 from decouple import config
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import EmailMessage
 
 from django.template.loader import render_to_string
 from memo.models import CardList
@@ -36,8 +36,3 @@ def send_email_task():
             email.send()
 
     return "Email sent"
-
-
-@shared_task()
-def add(x, y):
-    return x + y

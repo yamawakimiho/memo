@@ -28,7 +28,7 @@
 
 ## About the memo
 
-Memo is a flashcard-like web application built with Django, Django Rest Framework, jQuery and Bootstrap. You can create your own deck and also create flashcards with about contents you want to learn. The object of this application is to make learning interesting and fun.
+Memo is a flashcard-like web application built with Django, Django Rest Framework, jQuery, Bootstrap and Celery. You can create your own deck and also create flashcards with about contents you want to learn. The object of this application is to make learning interesting and fun.
 
 You can check the deployed project [here](https://memo-memo.herokuapp.com/).
 
@@ -67,14 +67,15 @@ Use the login credencial below to access the web application:
 
 ```sh
 root ┐
-     ├ accounts (login)
-     ├ memo (api)
-     ├ memo_front (app)
-     ├ project (core of memo)
-     ├ static
-     ├ templates ┐
-     └ ...       ├ frontend
-     └ ...       └ registration
+     ├─ accounts (login)
+     ├─ memo (api)
+     │  └─ tests
+     ├─ memo_front (app)
+     ├─ project (core of memo)
+     ├─ static
+     └─ templates
+        ├─ frontend
+        └─ registration
 ```
 
 ## Getting Started
@@ -167,12 +168,20 @@ Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
 >>> from project.tasks import send_email_task
 >>> send_email_task()
->>> <AsyncResult: 7e7b290-7dbb-4f9b-81b0-da917e083c14>
+>>> 'Email sent'
 ```
 
-Or run periodic scheduling with celery beat.
-** You can change the config in settings.py **
+-   Remember: To receive a email, you need at least 1 deck with activate = True or notification ON and your registered email should be a valid email.
+
+Or run periodic scheduling with celery beat (scheduler). <a href="https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html">See this documentation. </a>
+** You can change the scheduler configuration in settings.py **
 
 ```sh
 $  celery -A project.celery beat
+```
+
+or using beat with the worker:
+
+```sh
+$  celery -A project  worker -l info -beat
 ```
