@@ -87,7 +87,7 @@ const paginationTemplate = (next,previous) => {
   next = (!next) ? 'disabled' : next.split("?")[1];
 
   return ` <div class="col-md-12"><nav aria-label="page">
-    <ul class="pagination">
+    <ul class="pagination hand">
       <li class="page-item ${previous}"><a class="page-link" onclick="getDeck('${previous}')">Previous</a></li>
       <li class="page-item ${next}"><a class="page-link" onclick="getDeck('${next}')" >Next</a></li>
     </ul>

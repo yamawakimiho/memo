@@ -26,3 +26,7 @@ body {
   top:50%;
   left:50%;
 }
+
+.hand {
+  cursor: pointer;
+}

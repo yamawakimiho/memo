@@ -6,6 +6,7 @@ from django.core import mail
 from project.tasks import send_email_task
 from unittest.mock import patch
 
+
 class TestCelery(TestCase):
     def setUp(self):
         self.User = get_user_model()

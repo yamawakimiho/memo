@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", cast=bool)
 ALLOWED_HOSTS = [".herokuapp.com", "localhost", "127.0.0.1"]
-INTERNAL_IPS = ['127.0.0.1', 'localhost', '0.0.0.0']
+INTERNAL_IPS = ["127.0.0.1", "localhost", "0.0.0.0"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -125,8 +125,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 9
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 9,
 }
 
 # Sucessful login
@@ -143,19 +143,19 @@ CELERY_IMPORTS = ["project.tasks"]
 CELERY_TIMEZONE = "America/Sao_Paulo"
 
 # Email configs
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
+EMAIL_HOST_USER = config("EMAIL_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_PASSWORD")
 
 CELERY_BEAT_SCHEDULE = {
-      'send-email-every-midnight': {
-        'task': 'project.tasks.send_email_task',
-        'schedule': crontab(minute=0, hour=0),
-        'options': {
-            'expires': 15.0,
+    "send-email-every-midnight": {
+        "task": "project.tasks.send_email_task",
+        "schedule": crontab(minute=0, hour=0),
+        "options": {
+            "expires": 15.0,
         },
     },
 }
