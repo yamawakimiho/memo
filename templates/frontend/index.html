@@ -26,6 +26,7 @@
             </div>
           </div>
           <div class="container">
+            <div class="row" id="pagination"></div>
             <div class="row" id="deckList"></div>
             <div class="row" id="welcome"></div>
           </div>
@@ -41,25 +42,35 @@
   });
 
   const loadPage = () => {
-    let authToken = localStorage.getItem("auth");
 
+    let authToken = localStorage.getItem("auth");
+    
     buttons.innerHTML = `<div style="padding-bottom:10px;">
     <button type="button" class="btn btn-info btn-lg" onClick="openModal('addDeck')">Add deck</button>
     </div>`;
 
-    $.ajax({
-        url: "/api/decks/",
+    getDeck();
+  }
+
+const getDeck = (update = false) => {
+  $("#deckList").html("")
+
+  let url = (update) ? "/api/decks/?" + update : "/api/decks/";
+
+  $.ajax({
+        url: url,
         type: "GET",
         beforeSend: function(request) {
           request.setRequestHeader("Authorization", "Token " + authToken);
         },
         dataType: "json",
         success: function (data) {
-
-        if(data.length > 0){
-          for (let index = 0; index < data.length; index++){
-            $("#deckList").append(DecksCardTemplate(data[index]));
+        if(data.count > 0){
+          for (let index = 0; index < data.results.length; index++){
+            $("#deckList").append(DecksCardTemplate(data.results[index]));
           }
+
+          $('#pagination').html(paginationTemplate(data.next,data.previous))
         }else{
           $("#welcome").append(welcomeTemplate);
         }
@@ -69,7 +80,19 @@
           mainPageLoad();
         }
     });
-  }
+}
+
+const paginationTemplate = (next,previous) => {
+  previous = (!previous) ? 'disabled' : previous.split("?")[1];
+  next = (!next) ? 'disabled' : next.split("?")[1];
+
+  return ` <div class="col-md-12"><nav aria-label="page">
+    <ul class="pagination">
+      <li class="page-item ${previous}"><a class="page-link" onclick="getDeck('${previous}')">Previous</a></li>
+      <li class="page-item ${next}"><a class="page-link" onclick="getDeck('${next}')" >Next</a></li>
+    </ul>
+  </nav></div>`
+}
 
 const decksLoaded = () => {
   $( ".any-card" ).click(function () {
