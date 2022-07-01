@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
 from memo_front.views import redirect_if_not_logged, register_request
 from memo.urls import router
 

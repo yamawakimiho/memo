@@ -1,11 +1,10 @@
 from django.http import HttpResponse
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.shortcuts import render, redirect
-from .forms import SignUpForm
-from django.contrib.auth import login
-from django.contrib import messages
 from rest_framework.authtoken.models import Token
+from .forms import SignUpForm
 
 
 @login_required(login_url="/accounts/login/")

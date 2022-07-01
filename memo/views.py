@@ -1,14 +1,10 @@
+import datetime
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import authentication, permissions
-from rest_framework import status
 from rest_framework.views import APIView, Response
-from rest_framework import permissions
+from rest_framework import authentication, permissions, status, viewsets, permissions
 from .models import Card, CardAnswerHistory, CardList
 from .serializers import CardListSerializer, CardSerializer, CardAnswerHistorySerializer
-import datetime
 
 
 class DecksAPIView(viewsets.ModelViewSet):

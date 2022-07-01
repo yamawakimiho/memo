@@ -1,7 +1,7 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 from .views import CardsAPIView, DecksAPIView, CardAnswersAPIView
 from memo.views import DecksAPIView
-from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register("decks", DecksAPIView, basename="decks")
