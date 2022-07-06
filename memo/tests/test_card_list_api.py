@@ -33,6 +33,10 @@ class CardListTest(APITestCase):
             "%Y-%m-%d %H:%M:%S"
         )
 
+        self.updated_at = datetime.datetime.astimezone(self.deck.updated_at).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+
     def test_created_two_decks(self):
         self.assertEqual(2, CardList.objects.count())
 
@@ -58,7 +62,7 @@ class CardListTest(APITestCase):
                     "description": self.deck2.description,
                     "cards": [],
                     "created_at": self.created_at,
-                    "updated_at": self.created_at,
+                    "updated_at": self.updated_at,
                     "active": self.deck2.active,
                 },
                 {
@@ -67,7 +71,7 @@ class CardListTest(APITestCase):
                     "description": self.deck.description,
                     "cards": [],
                     "created_at": self.created_at,
-                    "updated_at": self.created_at,
+                    "updated_at": self.updated_at,
                     "active": self.deck.active,
                 },
             ],
