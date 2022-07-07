@@ -1,4 +1,3 @@
-import datetime
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView, Response
@@ -26,7 +25,6 @@ class DecksAPIView(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         kwargs["partial"] = True
-        request.data["updated_at"] = datetime.datetime.now()
         return super().update(request, *args, **kwargs)
 
     def perform_create(self, serializer_class):
@@ -65,7 +63,6 @@ class CardsAPIView(APIView):
     def put(self, request, pk):
         cards = get_object_or_404(Card, id=pk, owner=request.user)
         request.data["card_list"] = cards.card_list.id
-        request.data["updated_at"] = datetime.datetime.now()
         serializer = CardSerializer(cards, data=request.data)
         if serializer.is_valid():
             serializer.save()
