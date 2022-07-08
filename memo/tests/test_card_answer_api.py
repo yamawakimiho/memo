@@ -26,8 +26,8 @@ class CardAnswerHistoryTest(APITestCase):
         self.url = config("HOST_VAR") + "/api/cards/"
         self.url_create = config("HOST_VAR") + "/api/card_answer/"
 
-        self.deck = baker.make("CardList", owner=self.user)
-        self.card = baker.make("Card", owner=self.user, card_list=self.deck)
+        self.deck = baker.make("Deck", owner=self.user)
+        self.card = baker.make("Card", owner=self.user, deck=self.deck)
         self.data = {
             "correct": False,
             "card": self.card.id,

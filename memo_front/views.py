@@ -15,7 +15,7 @@ def redirect_if_not_logged(request):
 
 
 @login_required(login_url="/accounts/login/")
-def card_list(request, deck_id):
+def deck(request, deck_id):
     html_template = loader.get_template("frontend/cards/index.html")
     context = {"deck_id": deck_id, "auth": request.user.auth_token}
 

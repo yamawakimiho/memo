@@ -20,10 +20,10 @@ class CardTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         self.url = config("HOST_VAR") + "/api/cards/"
 
-        self.deck = baker.make("CardList", owner=self.user)
-        self.data = {"front": "Testing", "back": "Testing2", "card_list": self.deck.id}
-        self.card = baker.make("Card", owner=self.user, card_list=self.deck)
-        self.card2 = baker.make("Card", owner=self.user, card_list=self.deck)
+        self.deck = baker.make("Deck", owner=self.user)
+        self.data = {"front": "Testing", "back": "Testing2", "deck": self.deck.id}
+        self.card = baker.make("Card", owner=self.user, deck=self.deck)
+        self.card2 = baker.make("Card", owner=self.user, deck=self.deck)
 
     def test_created_two_cards(self):
         self.assertEqual(2, Card.objects.count())

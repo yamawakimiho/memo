@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CardAnswerHistory, CardList, Card
+from .models import CardAnswerHistory, Deck, Card
 
 
 class CardAnswerHistorySerializer(serializers.ModelSerializer):
@@ -26,18 +26,18 @@ class CardSerializer(serializers.ModelSerializer):
             "front",
             "back",
             "active",
-            "card_list",
+            "deck",
             "created_at",
             "updated_at",
             "card_history",
         )
 
 
-class CardListSerializer(serializers.ModelSerializer):
+class DeckSerializer(serializers.ModelSerializer):
     cards = CardSerializer(many=True, read_only=True)
 
     class Meta:
-        model = CardList
+        model = Deck
         fields = (
             "id",
             "name",

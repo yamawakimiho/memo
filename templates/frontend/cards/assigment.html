@@ -17,7 +17,7 @@
             </div>
           </div>
           <div class="container">
-            <div class="row" id="card_list">
+            <div class="row" id="deck">
             </div>
           </div>
       </div>
@@ -89,15 +89,15 @@
     const loadPageTemplate = (data) => {
         deckData = data.cards;
         progressTotal = deckData.length;
-        title.innerHTML = `<a href="{% url 'memo_front:card_list' deck_id=deck_id  %}">
+        title.innerHTML = `<a href="{% url 'memo_front:deck' deck_id=deck_id  %}">
             <div class="goBack" id="goBack">&#8249;</div></a> ` + data.name;
         legend.innerHTML = data.description;
-        card_list.innerHTML = loadCardAndAnswerBoxTemplate(data.cards[cardIndex]);
+        deck.innerHTML = loadCardAndAnswerBoxTemplate(data.cards[cardIndex]);
     }
 
     function goToNextCard(nextCardId){
         cardIndex++;
-        card_list.innerHTML = loadCardAndAnswerBoxTemplate(deckData[cardIndex])
+        deck.innerHTML = loadCardAndAnswerBoxTemplate(deckData[cardIndex])
     }
 
     function loadCardAndAnswerBoxTemplate(data) {
@@ -168,7 +168,7 @@
             </tbody>
         </table>`;
 
-        card_list.innerHTML = resultTemplate;
+        deck.innerHTML = resultTemplate;
     }
 
     const toggleCard = () => {

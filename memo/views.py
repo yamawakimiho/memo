@@ -2,15 +2,15 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView, Response
 from rest_framework import authentication, permissions, status, viewsets, permissions
-from .models import Card, CardAnswerHistory, CardList
-from .serializers import CardListSerializer, CardSerializer, CardAnswerHistorySerializer
+from .models import Card, CardAnswerHistory, Deck
+from .serializers import DeckSerializer, CardSerializer, CardAnswerHistorySerializer
 
 
 class DecksAPIView(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = CardListSerializer
-    queryset = CardList.objects.all()
+    serializer_class = DeckSerializer
+    queryset = Deck.objects.all()
 
     def get_queryset(self):
         return super().get_queryset().filter(owner=self.request.user).order_by("-id")
@@ -62,7 +62,7 @@ class CardsAPIView(APIView):
 
     def put(self, request, pk):
         cards = get_object_or_404(Card, id=pk, owner=request.user)
-        request.data["card_list"] = cards.card_list.id
+        request.data["deck"] = cards.deck.id
         serializer = CardSerializer(cards, data=request.data)
         if serializer.is_valid():
             serializer.save()

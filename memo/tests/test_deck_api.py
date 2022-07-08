@@ -1,6 +1,5 @@
-import json
 from rest_framework.authtoken.models import Token
-from memo.models import CardList
+from memo.models import Deck
 from decouple import config
 from rest_framework import status
 from model_bakery import baker
@@ -13,7 +12,7 @@ import sys
 # https://model-bakery.readthedocs.io/en/latest/basic_usage.html
 
 
-class CardListTest(APITestCase):
+class DeckTest(APITestCase):
     def setUp(self):
         self.User = get_user_model()
         self.user = self.User.objects.create_superuser(
@@ -26,8 +25,8 @@ class CardListTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         self.url = config("HOST_VAR") + "/api/decks/"
 
-        self.deck = baker.make("CardList", owner=self.user, description="testing")
-        self.deck2 = baker.make("CardList", owner=self.user, description="testing")
+        self.deck = baker.make("Deck", owner=self.user, description="testing")
+        self.deck2 = baker.make("Deck", owner=self.user, description="testing")
 
         self.created_at = datetime.datetime.astimezone(self.deck.created_at).strftime(
             "%Y-%m-%d %H:%M:%S"
@@ -38,7 +37,7 @@ class CardListTest(APITestCase):
         )
 
     def test_created_two_decks(self):
-        self.assertEqual(2, CardList.objects.count())
+        self.assertEqual(2, Deck.objects.count())
 
     def test_get_decks_requires_authorization(self):
         self.client.credentials()
@@ -95,7 +94,7 @@ class CardListTest(APITestCase):
 
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(3, CardList.objects.count())
+        self.assertEqual(3, Deck.objects.count())
 
     def test_patch_deck_change_active_status_false(self):
         data = {"active": False}

@@ -15,7 +15,7 @@ class Base(models.Model):
         abstract = True
 
 
-class CardList(Base):
+class Deck(Base):
     name = models.CharField(
         max_length=100,
         validators=[
@@ -25,8 +25,9 @@ class CardList(Base):
     description = models.TextField(verbose_name=("Description"), blank=True, default="")
 
     class Meta:
-        verbose_name_plural = "Cards List"
-
+        verbose_name_plural = "Decks"
+        verbose_name = "Deck"
+        
     def __str__(self):
         return self.name
 
@@ -34,8 +35,8 @@ class CardList(Base):
 class Card(Base):
     front = models.CharField(max_length=255, verbose_name=("Front"))
     back = models.CharField(max_length=255, verbose_name=("Back"))
-    card_list = models.ForeignKey(
-        CardList, related_name="cards", on_delete=models.CASCADE
+    deck = models.ForeignKey(
+        Deck, related_name="cards", on_delete=models.CASCADE
     )
 
     class Meta:
@@ -58,3 +59,36 @@ class CardAnswerHistory(Base):
 
     def __str__(self):
         return f"{self.card}: {self.user_answer}, {self.correct}"
+
+class PresetDeck(Base):
+    name = models.CharField(
+        max_length=100,
+        validators=[
+            MinLengthValidator(2, "Card name must be grater than 2 characters")
+        ],
+    )
+    description = models.TextField(verbose_name=("Description"), blank=True, default="")
+    active = None
+    owner = None
+
+    class Meta:
+        verbose_name_plural = "Preset Decks"
+
+    def __str__(self):
+        return self.name
+
+class PresetCard(Base):
+    front = models.CharField(max_length=255, verbose_name=("Front"))
+    back = models.CharField(max_length=255, verbose_name=("Back"))
+    deck = models.ForeignKey(
+        PresetDeck, related_name="cards", on_delete=models.CASCADE
+    )
+    active = None
+    owner = None
+
+    class Meta:
+        verbose_name_plural = "Preset Cards"
+        verbose_name = "Preset Cards"
+
+    def __str__(self):
+        return f"{self.front}, {self.back}"
