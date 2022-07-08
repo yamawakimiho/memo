@@ -10,45 +10,95 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('memo', '0004_alter_card_options_alter_cardlist_options'),
+        ("memo", "0004_alter_card_options_alter_cardlist_options"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PresetDeck',
+            name="PresetDeck",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created At')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated At')),
-                ('name', models.CharField(max_length=100, validators=[django.core.validators.MinLengthValidator(2, 'Card name must be grater than 2 characters')])),
-                ('description', models.TextField(blank=True, default='', verbose_name='Description')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(auto_now_add=True, verbose_name="Created At"),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Updated At"),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100,
+                        validators=[
+                            django.core.validators.MinLengthValidator(
+                                2, "Card name must be grater than 2 characters"
+                            )
+                        ],
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True, default="", verbose_name="Description"
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Preset Decks',
+                "verbose_name_plural": "Preset Decks",
             },
         ),
         migrations.RenameModel(
-            old_name='CardList',
-            new_name='Deck',
+            old_name="CardList",
+            new_name="Deck",
         ),
         migrations.RenameField(
-            model_name='card',
-            old_name='card_list',
-            new_name='deck',
+            model_name="card",
+            old_name="card_list",
+            new_name="deck",
         ),
         migrations.CreateModel(
-            name='PresetCard',
+            name="PresetCard",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created At')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated At')),
-                ('front', models.CharField(max_length=255, verbose_name='Front')),
-                ('back', models.CharField(max_length=255, verbose_name='Back')),
-                ('deck', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='cards', to='memo.presetdeck')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(auto_now_add=True, verbose_name="Created At"),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Updated At"),
+                ),
+                ("front", models.CharField(max_length=255, verbose_name="Front")),
+                ("back", models.CharField(max_length=255, verbose_name="Back")),
+                (
+                    "deck",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="cards",
+                        to="memo.presetdeck",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Preset Cards',
-                'verbose_name_plural': 'Preset Cards',
+                "verbose_name": "Preset Cards",
+                "verbose_name_plural": "Preset Cards",
             },
         ),
     ]

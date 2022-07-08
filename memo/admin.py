@@ -32,6 +32,7 @@ class CardAdmin(admin.ModelAdmin):
 class CardAnswerHistoryAdmin(admin.ModelAdmin):
     list_display = ("user_answer", "correct", "created_at", "card", "owner")
 
+
 @admin.register(PresetCard)
 class PresetCardAdmin(admin.ModelAdmin):
     list_display = (
@@ -41,6 +42,7 @@ class PresetCardAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
+
 
 @admin.register(PresetDeck)
 class PresetDeckAdmin(admin.ModelAdmin):

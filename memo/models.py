@@ -27,7 +27,7 @@ class Deck(Base):
     class Meta:
         verbose_name_plural = "Decks"
         verbose_name = "Deck"
-        
+
     def __str__(self):
         return self.name
 
@@ -35,9 +35,7 @@ class Deck(Base):
 class Card(Base):
     front = models.CharField(max_length=255, verbose_name=("Front"))
     back = models.CharField(max_length=255, verbose_name=("Back"))
-    deck = models.ForeignKey(
-        Deck, related_name="cards", on_delete=models.CASCADE
-    )
+    deck = models.ForeignKey(Deck, related_name="cards", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Cards"
@@ -60,6 +58,7 @@ class CardAnswerHistory(Base):
     def __str__(self):
         return f"{self.card}: {self.user_answer}, {self.correct}"
 
+
 class PresetDeck(Base):
     name = models.CharField(
         max_length=100,
@@ -77,12 +76,11 @@ class PresetDeck(Base):
     def __str__(self):
         return self.name
 
+
 class PresetCard(Base):
     front = models.CharField(max_length=255, verbose_name=("Front"))
     back = models.CharField(max_length=255, verbose_name=("Back"))
-    deck = models.ForeignKey(
-        PresetDeck, related_name="cards", on_delete=models.CASCADE
-    )
+    deck = models.ForeignKey(PresetDeck, related_name="cards", on_delete=models.CASCADE)
     active = None
     owner = None
 
