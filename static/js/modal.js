@@ -71,7 +71,7 @@ const loadModalTemplates = (options, id) => {
                 <div  id="invalidCheckCardBack" class="invalid-feedback">
                 Please provide an answer.
                 </div>
-            </div>`;
+                </div>`;
         }else if(options === "historyCard"){
             template.title = "Answer History";
             template.button = "";
@@ -89,7 +89,37 @@ const loadModalTemplates = (options, id) => {
             description += '</tbody></table></div>';
             description += "<script>getAnswerHistory("+ id +")</script>";
             template.description = description;
+        }else if(options === "getPresetDeckDetails"){
+            let presetDeck = presetDeckData.results[id];
+            let cardsDetails = "";
+
+            for(let card in presetDeck.preset_cards){
+                cardsDetails += 
+                    `<tr>
+                        <td>${presetDeck.preset_cards[card].front}</td>
+                        <td>${presetDeck.preset_cards[card].back}</td>
+                    </tr>`;
+            }
+
+            template.title = `Deck name: ${presetDeck.name}`
+            template.description = `
+                <div class="form-group">
+                <p><b>Created at:</b> ${presetDeck.created_at} - <b>Total Cards:</b> ${presetDeck.preset_cards.length}</p>
+                <p><b>Description of this deck:</b> ${presetDeck.description}</p>
+                <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Front</th>
+                    <th scope="col">Back</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    ${cardsDetails}
+                </tbody>
+                </table>
+                </div>`;
         }
+
     return template;
 }
 

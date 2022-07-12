@@ -1,5 +1,9 @@
 from rest_framework import serializers
-from .models import CardAnswerHistory, Deck, Card
+from .models import CardAnswerHistory, Deck, Card, PresetCard, PresetDeck
+
+from django.contrib.auth.models import User
+from django.utils.timezone import now
+from rest_framework import serializers
 
 
 class CardAnswerHistorySerializer(serializers.ModelSerializer):
@@ -47,3 +51,29 @@ class DeckSerializer(serializers.ModelSerializer):
             "updated_at",
             "active",
         )
+
+
+class PresetCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PresetCard
+        fields = ("id", "front", "back", "preset_deck")
+
+
+class PresetDeckSerializer(serializers.ModelSerializer):
+    preset_cards = PresetCardSerializer(many=True, read_only=True)
+    my_field = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PresetDeck
+        fields = (
+            "id",
+            "name",
+            "description",
+            "preset_cards",
+            "created_at",
+            "updated_at",
+            "my_field",
+        )
+
+    def get_my_field(self, obj):
+        return now()

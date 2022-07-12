@@ -38,7 +38,7 @@ class PresetCardAdmin(admin.ModelAdmin):
     list_display = (
         "front",
         "back",
-        "deck",
+        "preset_deck",
         "created_at",
         "updated_at",
     )

@@ -1,0 +1,135 @@
+{% extends 'frontend/base.html' %} 
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <div class="row align-items-center" style="padding-bottom:30px;">
+            <div class="col-md-6">
+              <h1>Preset Decks</h1>
+                <div id="legend"></div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row" id="pagination"></div>
+            <div class="row" id="deckList"></div>
+          </div>
+      </div>
+    </div>
+</div>
+{% endblock content %} 
+{% block js %}
+<script>
+  let presetDeckData = [];
+
+    $(document).ready(function () {
+      loadPage();
+    });
+  
+    const loadPage = () => {
+      let authToken = localStorage.getItem("auth");
+      requestGetPresetDeck();
+    }
+
+  const requestGetPresetDeck = (pagination = false) => {
+    $("#deckList").html("");
+
+    let url = (pagination) ? "/api/preset_decks/?" + pagination : "/api/preset_decks/";
+
+    $.ajax({
+      url: url,
+      type: "GET",
+      beforeSend: function(request) {
+        request.setRequestHeader("Authorization", "Token " + authToken);
+      },
+      dataType: "json",
+      success: function (data) {
+        if(data.count > 0){
+          
+          presetDeckData = data;
+
+          for (let index = 0; index < data.results.length; index++){
+            $("#deckList").append(presetDeckCardTemplate(data.results[index]));
+          }
+
+          $('#pagination').html(paginationTemplate('requestGetPresetDeck',data.next,data.previous))
+        }
+
+      },
+      complete: function(){
+        mainPageLoad();
+      }
+    });
+}
+
+  const presetDeckCardTemplate = (data) => {   
+    let cardLengthButton = (data.preset_cards.length > 0) ?
+      `<p class="card-text">
+      <button type="button" 
+      onClick="openModal('getPresetDeckDetails',${data.id})"
+      class="btn btn-outline-info">
+      Total cards in this deck: ${data.preset_cards.length}
+      </button></p>`
+    :
+      `<p class="card-text"><button type="button" 
+      class="btn btn-outline-dark">
+      Cards unavailable / not found
+      </button></p>`;
+  
+    return ` 
+      <div class="col-md-4">
+        <div class="card text-center" 
+        style="width: 18rem; margin-bottom:10px; height:250px; cursor: pointer;">
+        <div class="card-body any-card" id=${data.id}>
+        <h4 class="card-title">${data.name}</h5>
+        <p class="card-text">Created at: ${data.created_at}</p>
+        </div>
+        <div class="card-footer text-muted">
+        ${cardLengthButton}
+        <p class="card-text">
+          <div class="spinner-border text-primary hide" id"=loading_${data.id}" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <button type="button" 
+          class="btn btn-primary"
+          id="addDeckButton_${data.id}"
+          onClick="requestAddToUserDeck(${data.id})">
+            Add to your Deck List
+          </button>
+        </p>
+        </div>
+      </div>`;
+  }
+
+  const isButtonLoading = (isLoading,id) =>{
+    if(isLoading === true){
+      $("loading_" + id).show();
+      $("addDeckButton_" + id).hide();
+    }else{
+      $("loading_" + id).hide();
+      $("addDeckButton_" + id).show();
+    }
+  }
+
+  const requestAddToUserDeck = (id) => {
+    isButtonLoading(true,id);
+
+      $.ajax({
+        url: "/api/preset_decks/" +id+ "/add_to_decks",
+        type: "POST",
+        beforeSend: function(request) {
+          request.setRequestHeader("Authorization", "Token " + authToken);
+        },
+        dataType: "json",
+        success: function (data) {
+         alert("Successfully added ");
+        },
+        error: function(data){
+          alert('Unable to add the deck to your deck list')
+        },
+        complete: function(){
+          isButtonLoading(false,id)
+        }
+      });
+  }
+</script>
+{% endblock js %}
+

@@ -47,9 +47,7 @@ class Card(Base):
 
 class CardAnswerHistory(Base):
     user_answer = models.CharField(max_length=255, verbose_name=("Answer"))
-    correct = models.BooleanField(
-        default=True, verbose_name=("Correct")
-    )  # is it correct or not?
+    correct = models.BooleanField(default=True, verbose_name=("Correct"))
     card = models.ForeignKey(
         Card, related_name="card_answers", on_delete=models.CASCADE
     )
@@ -72,6 +70,7 @@ class PresetDeck(Base):
 
     class Meta:
         verbose_name_plural = "Preset Decks"
+        verbose_name = "Preset Deck"
 
     def __str__(self):
         return self.name
@@ -80,13 +79,15 @@ class PresetDeck(Base):
 class PresetCard(Base):
     front = models.CharField(max_length=255, verbose_name=("Front"))
     back = models.CharField(max_length=255, verbose_name=("Back"))
-    deck = models.ForeignKey(PresetDeck, related_name="cards", on_delete=models.CASCADE)
+    preset_deck = models.ForeignKey(
+        PresetDeck, related_name="preset_cards", on_delete=models.CASCADE
+    )
     active = None
     owner = None
 
     class Meta:
         verbose_name_plural = "Preset Cards"
-        verbose_name = "Preset Cards"
+        verbose_name = "Preset Card"
 
     def __str__(self):
         return f"{self.front}, {self.back}"
