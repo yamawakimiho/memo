@@ -108,7 +108,7 @@ class DeckTest(APITestCase):
             "description": self.deck.description,
             "cards": [],
             "created_at": self.created_at,
-            "updated_at": self.created_at,
+            "updated_at": self.updated_at,
             "active": False,
         }
 
@@ -127,7 +127,7 @@ class DeckTest(APITestCase):
             "description": self.deck.description,
             "cards": [],
             "created_at": self.created_at,
-            "updated_at": self.created_at,
+            "updated_at": self.updated_at,
             "active": True,
         }
 
