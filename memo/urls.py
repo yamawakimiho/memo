@@ -25,7 +25,7 @@ urlpatterns = [
     ),
     path("card_answer/", CardAnswersAPIView.as_view(), name="answer_card"),
     path(
-        "preset_decks/<int:pk>/add_to_decks",
+        "preset_decks/<int:pk>/add_to_decks/",
         AddPresetDeckToUserDeckAPIView.as_view(),
         name="preset_deck_to_deck",
     ),

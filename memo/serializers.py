@@ -61,7 +61,6 @@ class PresetCardSerializer(serializers.ModelSerializer):
 
 class PresetDeckSerializer(serializers.ModelSerializer):
     preset_cards = PresetCardSerializer(many=True, read_only=True)
-    my_field = serializers.SerializerMethodField()
 
     class Meta:
         model = PresetDeck
@@ -72,8 +71,4 @@ class PresetDeckSerializer(serializers.ModelSerializer):
             "preset_cards",
             "created_at",
             "updated_at",
-            "my_field",
         )
-
-    def get_my_field(self, obj):
-        return now()

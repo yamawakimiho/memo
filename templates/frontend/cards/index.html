@@ -197,8 +197,8 @@
                 $("#cards").append(loadCardTemplate(response));
                 disableStartButtonIfCardDoesntExist();
             },
-            error: function(response){
-                console.log(response);
+            error: function(){
+                alert("Unable to add a card");
             },
             complete: function(){
                 isModalLoading(false);

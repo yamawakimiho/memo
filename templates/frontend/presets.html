@@ -113,7 +113,7 @@
     isButtonLoading(true,id);
 
       $.ajax({
-        url: "/api/preset_decks/" +id+ "/add_to_decks",
+        url: "/api/preset_decks/" + id + "/add_to_decks/",
         type: "POST",
         beforeSend: function(request) {
           request.setRequestHeader("Authorization", "Token " + authToken);
