@@ -1,11 +1,11 @@
-import datetime
-from rest_framework.authtoken.models import Token
-from memo.models import CardAnswerHistory
-from decouple import config
-from model_bakery import baker
 from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from rest_framework import status
+from decouple import config
+from model_bakery import baker
+from utils import convertTimeStamp
+from memo.models import CardAnswerHistory
 
 
 class CardAnswerHistoryTest(APITestCase):
@@ -51,9 +51,8 @@ class CardAnswerHistoryTest(APITestCase):
     def test_get_card_answer_success(self):
         response = self.client.get(self.url + str(self.card.id) + "/card_answer/")
 
-        created_at = datetime.datetime.astimezone(self.card_answer.created_at).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
+        created_at = convertTimeStamp(self.card_answer.created_at)
+
         expected_data = [
             {
                 "id": self.card_answer.id,

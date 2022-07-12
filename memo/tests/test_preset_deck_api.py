@@ -1,11 +1,11 @@
-import datetime
-from rest_framework.authtoken.models import Token
-from memo.models import Deck, PresetDeck
-from decouple import config
-from model_bakery import baker
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
 from rest_framework import status
+from decouple import config
+from model_bakery import baker
+from utils import convertTimeStamp
+from memo.models import Deck, PresetDeck
 
 
 class PresetDeckTest(APITestCase):
@@ -25,13 +25,9 @@ class PresetDeckTest(APITestCase):
         self.preset_card = baker.make("PresetCard", preset_deck=self.preset_deck)
         self.preset_deck2 = baker.make("PresetDeck", name="BAC")
 
-        self.created_at = datetime.datetime.astimezone(
-            self.preset_deck.created_at
-        ).strftime("%Y-%m-%d %H:%M:%S")
+        self.created_at = convertTimeStamp(self.preset_deck.created_at)
 
-        self.updated_at = datetime.datetime.astimezone(
-            self.preset_deck.updated_at
-        ).strftime("%Y-%m-%d %H:%M:%S")
+        self.updated_at = convertTimeStamp(self.preset_deck.updated_at)
 
     def test_created_preset_deck(self):
         self.assertEqual(2, PresetDeck.objects.count())

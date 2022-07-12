@@ -1,10 +1,10 @@
-from rest_framework.authtoken.models import Token
-from memo.models import Card
-from decouple import config
-from rest_framework import status
-from model_bakery import baker
 from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
+from rest_framework import status
+from decouple import config
+from model_bakery import baker
+from memo.models import Card
 
 
 class CardTest(APITestCase):

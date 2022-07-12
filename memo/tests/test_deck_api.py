@@ -1,12 +1,12 @@
-from rest_framework.authtoken.models import Token
-from memo.models import Deck
-from decouple import config
-from rest_framework import status
-from model_bakery import baker
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
-import datetime
-import sys
+from rest_framework import status
+from decouple import config
+from model_bakery import baker
+from memo.models import Deck
+from utils import convertTimeStamp
 
 # https://www.django-rest-framework.org/api-guide/testing/
 # https://model-bakery.readthedocs.io/en/latest/basic_usage.html
@@ -28,13 +28,8 @@ class DeckTest(APITestCase):
         self.deck = baker.make("Deck", owner=self.user, description="testing")
         self.deck2 = baker.make("Deck", owner=self.user, description="testing")
 
-        self.created_at = datetime.datetime.astimezone(self.deck.created_at).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
-
-        self.updated_at = datetime.datetime.astimezone(self.deck.updated_at).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
+        self.updated_at = convertTimeStamp(self.deck.updated_at)
+        self.created_at = convertTimeStamp(self.deck.created_at)
 
     def test_created_two_decks(self):
         self.assertEqual(2, Deck.objects.count())
@@ -102,13 +97,18 @@ class DeckTest(APITestCase):
             self.url + str(self.deck.id) + "/", data, format="json"
         )
 
+        deck_object = get_object_or_404(Deck, pk=self.deck.id)
+
+        created_at = convertTimeStamp(deck_object.created_at)
+        updated_at = convertTimeStamp(deck_object.updated_at)
+
         expected_data = {
-            "id": self.deck.id,
-            "name": self.deck.name,
-            "description": self.deck.description,
+            "id": deck_object.id,
+            "name": deck_object.name,
+            "description": deck_object.description,
             "cards": [],
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
+            "created_at": created_at,
+            "updated_at": updated_at,
             "active": False,
         }
 
@@ -121,13 +121,18 @@ class DeckTest(APITestCase):
             self.url + str(self.deck.id) + "/", data, format="json"
         )
 
+        deck_object = get_object_or_404(Deck, pk=self.deck.id)
+
+        created_at = convertTimeStamp(deck_object.created_at)
+        updated_at = convertTimeStamp(deck_object.updated_at)
+
         expected_data = {
-            "id": self.deck.id,
-            "name": self.deck.name,
-            "description": self.deck.description,
+            "id": deck_object.id,
+            "name": deck_object.name,
+            "description": deck_object.description,
             "cards": [],
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
+            "created_at": created_at,
+            "updated_at": updated_at,
             "active": True,
         }
 
