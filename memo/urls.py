@@ -16,6 +16,7 @@ urlpatterns = router.urls
 app_name = "memo"
 
 urlpatterns = [
+    path("cards/<int:pk>/", CardsAPIView.as_view(), name="card"),
     path("cards/", CardsAPIView.as_view(), name="cards"),
     path("preset_decks/", PresetDecksAPIView.as_view(), name="preset_decks"),
     path("cards/", CardsAPIView.as_view(), name="cards"),
