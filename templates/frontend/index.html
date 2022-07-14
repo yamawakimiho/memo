@@ -71,7 +71,7 @@ const getDeck = (pagination = false) => {
 const decksLoaded = () => {
   $( ".any-card" ).click(function () {
     let id = $(this).attr('id');
-        window.location.href = "/cards/list/" + id + "/";
+        window.location.href = "/cards/deck/" + id + "/";
   });
 
   $( ".switch_deck" ).click(function () {

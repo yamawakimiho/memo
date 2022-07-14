@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from decouple import config
 from model_bakery import baker
-from utils import convertTimeStamp
+from utils import convert_timestamp
 from memo.models import Deck, PresetDeck
 
 
@@ -25,9 +25,9 @@ class PresetDeckTest(APITestCase):
         self.preset_card = baker.make("PresetCard", preset_deck=self.preset_deck)
         self.preset_deck2 = baker.make("PresetDeck", name="BAC")
 
-        self.created_at = convertTimeStamp(self.preset_deck.created_at)
+        self.created_at = convert_timestamp(self.preset_deck.created_at)
 
-        self.updated_at = convertTimeStamp(self.preset_deck.updated_at)
+        self.updated_at = convert_timestamp(self.preset_deck.updated_at)
 
     def test_created_preset_deck(self):
         self.assertEqual(2, PresetDeck.objects.count())

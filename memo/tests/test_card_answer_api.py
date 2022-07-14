@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from decouple import config
 from model_bakery import baker
-from utils import convertTimeStamp
+from utils import convert_timestamp
 from memo.models import CardAnswerHistory
 
 
@@ -51,7 +51,7 @@ class CardAnswerHistoryTest(APITestCase):
     def test_get_card_answer_success(self):
         response = self.client.get(self.url + str(self.card.id) + "/card_answer/")
 
-        created_at = convertTimeStamp(self.card_answer.created_at)
+        created_at = convert_timestamp(self.card_answer.created_at)
 
         expected_data = [
             {

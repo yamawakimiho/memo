@@ -6,7 +6,7 @@ from rest_framework import status
 from decouple import config
 from model_bakery import baker
 from memo.models import Deck
-from utils import convertTimeStamp
+from utils import convert_timestamp
 
 # https://www.django-rest-framework.org/api-guide/testing/
 # https://model-bakery.readthedocs.io/en/latest/basic_usage.html
@@ -28,8 +28,8 @@ class DeckTest(APITestCase):
         self.deck = baker.make("Deck", owner=self.user, description="testing")
         self.deck2 = baker.make("Deck", owner=self.user, description="testing")
 
-        self.updated_at = convertTimeStamp(self.deck.updated_at)
-        self.created_at = convertTimeStamp(self.deck.created_at)
+        self.updated_at = convert_timestamp(self.deck.updated_at)
+        self.created_at = convert_timestamp(self.deck.created_at)
 
     def test_created_two_decks(self):
         self.assertEqual(2, Deck.objects.count())
@@ -99,8 +99,8 @@ class DeckTest(APITestCase):
 
         deck_object = get_object_or_404(Deck, pk=self.deck.id)
 
-        created_at = convertTimeStamp(deck_object.created_at)
-        updated_at = convertTimeStamp(deck_object.updated_at)
+        created_at = convert_timestamp(deck_object.created_at)
+        updated_at = convert_timestamp(deck_object.updated_at)
 
         expected_data = {
             "id": deck_object.id,
@@ -123,8 +123,8 @@ class DeckTest(APITestCase):
 
         deck_object = get_object_or_404(Deck, pk=self.deck.id)
 
-        created_at = convertTimeStamp(deck_object.created_at)
-        updated_at = convertTimeStamp(deck_object.updated_at)
+        created_at = convert_timestamp(deck_object.created_at)
+        updated_at = convert_timestamp(deck_object.updated_at)
 
         expected_data = {
             "id": deck_object.id,
