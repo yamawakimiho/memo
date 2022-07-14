@@ -1,19 +1,5 @@
 {% extends 'frontend/base.html' %} 
 {% block content %}
-<style>
-  .hide{
-    display:none;
-  }
-  .show{
-    display:inline;
-  }
-
-  .text-ellipsis{
-   text-overflow: ellipsis;
-   overflow: hidden;
-   white-space: nowrap;
-  }
-</style>
 <div class="container">
     <div class="jumbotron">
         <div class="row align-items-center" style="padding-bottom:30px;">
@@ -52,10 +38,10 @@
     getDeck();
   }
 
-const getDeck = (update = false) => {
+const getDeck = (pagination = false) => {
   $("#deckList").html("")
 
-  let url = (update) ? "/api/decks/?" + update : "/api/decks/";
+  let url = (pagination) ? "/api/decks/?" + pagination : "/api/decks/";
 
   $.ajax({
         url: url,
@@ -70,7 +56,7 @@ const getDeck = (update = false) => {
             $("#deckList").append(DecksCardTemplate(data.results[index]));
           }
 
-          $('#pagination').html(paginationTemplate(data.next,data.previous))
+          $('#pagination').html(paginationTemplate('getDeck',data.next,data.previous))
         }else{
           $("#welcome").append(welcomeTemplate);
         }
@@ -82,22 +68,10 @@ const getDeck = (update = false) => {
     });
 }
 
-const paginationTemplate = (next,previous) => {
-  previous = (!previous) ? 'disabled' : previous.split("?")[1];
-  next = (!next) ? 'disabled' : next.split("?")[1];
-
-  return ` <div class="col-md-12"><nav aria-label="page">
-    <ul class="pagination hand">
-      <li class="page-item ${previous}"><a class="page-link" onclick="getDeck('${previous}')">Previous</a></li>
-      <li class="page-item ${next}"><a class="page-link" onclick="getDeck('${next}')" >Next</a></li>
-    </ul>
-  </nav></div>`
-}
-
 const decksLoaded = () => {
   $( ".any-card" ).click(function () {
     let id = $(this).attr('id');
-        window.location.href = "/cards/list/" + id + "/";
+        window.location.href = "/cards/deck/" + id + "/";
   });
 
   $( ".switch_deck" ).click(function () {
@@ -202,7 +176,7 @@ const welcomeTemplate = () => {
       </div>
       </div>
     </div>`;
-}
+  }
 
 </script>
 {% endblock js %}
