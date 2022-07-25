@@ -16,7 +16,7 @@
                         <th>Last Response</th>
                         <th>Average % of correct</th>
                         <th>Total deck's response</th>
-                        <th>Card with the highest mistaken percentage</th>
+                        <th>Card with the highest mistaken %</th>
                     </tr>
                 </thead>
                 <tbody id="tableData">
@@ -40,7 +40,6 @@
     }
 
   const requestGetRequestTable = () => {
-
     $.ajax({
       url: "/api/my-learning-results/",
       type: "GET",
@@ -65,22 +64,22 @@
 }
 
 const tableTemplate = (deck) => {
-      highestMistaken = (deck.cardsWithHighestMistaken.length === 0) ?
-      '-' : deck.cardsWithHighestMistaken[0].front 
-      + ' - ' + deck.cardsWithHighestMistaken[0].highest_mistaken + '%';
+      highestMistaken = (deck.card_with_highest_mistaken.length === 0) ?
+      '-' : deck.card_with_highest_mistaken[0].front 
+      + ' (' + deck.card_with_highest_mistaken[0].highest_mistaken_percentage + '%' + ')';
 
-      averagePercentageOfCorrect = (deck.averagePercentageOfCorrect === null) ? 
-      '-' : deck.averagePercentageOfCorrect + '%';
+      averagePercentageOfCorrectAnswers = (deck.average_percentage_of_correct_answers === null) ? 
+      '-' : deck.average_percentage_of_correct_answers + '%';
 
-      amountOfCards = (!deck.amountOfCards) ? 
-      ' - ' : deck.amountOfCards;
+      amountOfCards = (!deck.amount_of_cards) ? 
+      ' - ' : deck.amount_of_cards;
 
       return `<tr> 
-        <td>${deck.deckName}</td>
+        <td>${deck.deck_name}</td>
         <td>${amountOfCards}</td>
-        <td>${deck.lastResponseDay ?? '-'}</td>
-        <td>${averagePercentageOfCorrect}</td>
-        <td>${deck.totalDecksResponse ?? '-'}</td>
+        <td>${deck.last_response ?? '-'}</td>
+        <td>${averagePercentageOfCorrectAnswers}</td>
+        <td>${deck.total_deck_response ?? '-'}</td>
         <td>${highestMistaken}</td>
         </tr>`
   }
