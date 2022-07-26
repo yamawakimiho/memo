@@ -8,15 +8,15 @@
                 <div id="legend"></div>
             </div>
           </div>
-              <table id="table" class="display" >
+              <table id="table" class="display">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Cards</th>
-                        <th>Last Response</th>
-                        <th>Average % of correct</th>
                         <th>Total deck's response</th>
+                        <th>Average % of correct response</th>
                         <th>Card with the highest mistaken %</th>
+                        <th>Last Response</th>
                     </tr>
                 </thead>
                 <tbody id="tableData">
@@ -64,23 +64,26 @@
 }
 
 const tableTemplate = (deck) => {
-      highestMistaken = (deck.card_with_highest_mistaken.length === 0) ?
-      '-' : deck.card_with_highest_mistaken[0].front 
-      + ' (' + deck.card_with_highest_mistaken[0].highest_mistaken_percentage + '%' + ')';
-
+      if(deck.card_with_highest_mistaken.length === 0){
+        highestMistaken = '-'
+      }else{
+        card = deck.card_with_highest_mistaken[0]
+        highestMistaken = card[0] + ' (' + card[1] + '%) ';
+      }
+      
       averagePercentageOfCorrectAnswers = (deck.average_percentage_of_correct_answers === null) ? 
       '-' : deck.average_percentage_of_correct_answers + '%';
 
       amountOfCards = (!deck.amount_of_cards) ? 
       ' - ' : deck.amount_of_cards;
-
+      console.log(deck.card_with_highest_mistaken[0])
       return `<tr> 
         <td>${deck.deck_name}</td>
         <td>${amountOfCards}</td>
-        <td>${deck.last_response ?? '-'}</td>
-        <td>${averagePercentageOfCorrectAnswers}</td>
         <td>${deck.total_deck_response ?? '-'}</td>
+        <td>${averagePercentageOfCorrectAnswers}</td>
         <td>${highestMistaken}</td>
+        <td>${deck.last_response ?? '-'}</td>
         </tr>`
   }
 

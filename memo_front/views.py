@@ -22,6 +22,13 @@ def presets(request):
 
 
 @login_required(login_url="/accounts/login/")
+def my_learning(request):
+    html_template = loader.get_template("frontend/my-learning.html")
+    context = {"auth": request.user.auth_token}
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/accounts/login/")
 def deck(request, deck_id):
     html_template = loader.get_template("frontend/cards/index.html")
     context = {"deck_id": deck_id, "auth": request.user.auth_token}

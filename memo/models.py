@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinLengthValidator
+from .managers import CardManager, DeckManager
 
 
 class Base(models.Model):
@@ -24,6 +25,8 @@ class Deck(Base):
     )
     description = models.TextField(verbose_name=("Description"), blank=True, default="")
 
+    objects = DeckManager()
+
     class Meta:
         verbose_name_plural = "Decks"
         verbose_name = "Deck"
@@ -36,6 +39,8 @@ class Card(Base):
     front = models.CharField(max_length=255, verbose_name=("Front"))
     back = models.CharField(max_length=255, verbose_name=("Back"))
     deck = models.ForeignKey(Deck, related_name="cards", on_delete=models.CASCADE)
+
+    objects = CardManager()
 
     class Meta:
         verbose_name_plural = "Cards"

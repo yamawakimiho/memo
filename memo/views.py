@@ -7,7 +7,6 @@ from .serializers import (
     DeckSerializer,
     CardSerializer,
     CardAnswerHistorySerializer,
-    PresetCardSerializer,
     PresetDeckSerializer,
 )
 from rest_framework.pagination import PageNumberPagination
@@ -125,3 +124,9 @@ class AddPresetDeckToUserDeckAPIView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class MyLearningTableAPIView(APIView):
+    def get(self, request):
+        my_learning = Deck.objects.get_my_learning_queryset(request.user)
+        return Response(my_learning, status=status.HTTP_200_OK)
