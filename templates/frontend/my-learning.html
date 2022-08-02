@@ -1,0 +1,92 @@
+{% extends 'frontend/base.html' %} 
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <div class="row align-items-center" style="padding-bottom:30px;">
+            <div class="col-md-6">
+              <h1>My learning</h1>
+                <div id="legend"></div>
+            </div>
+          </div>
+              <table id="table" class="display">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Cards</th>
+                        <th>Total deck's response</th>
+                        <th>Average % of correct response</th>
+                        <th>Card with the highest mistaken %</th>
+                        <th>Last Response</th>
+                    </tr>
+                </thead>
+                <tbody id="tableData">
+                </tbody>
+            </table>
+      </div>
+    </div>
+</div>
+{% endblock content %} 
+{% block js %}
+<script>
+  let presetDeckData = [];
+
+    $(document).ready(function () {
+      loadPage();
+    });
+  
+    const loadPage = () => {
+      let authToken = localStorage.getItem("auth");
+      requestGetRequestTable();
+    }
+
+  const requestGetRequestTable = () => {
+    $.ajax({
+      url: "/api/my-learning-results/",
+      type: "GET",
+      beforeSend: function(request) {
+        request.setRequestHeader("Authorization", "Token " + authToken);
+      },
+      dataType: "json",
+      success: function (data) {
+
+        if(data.length > 0){
+          for (let index = 0; index < data.length; index++){
+            $("#tableData").append(tableTemplate(data[index]));
+          }
+        }
+
+      },
+      complete: function(){
+        $('#table').DataTable();
+        mainPageLoad();
+      }
+    });
+}
+
+const tableTemplate = (deck) => {
+      if(deck.card_with_highest_mistaken.length === 0){
+        highestMistaken = '-'
+      }else{
+        card = deck.card_with_highest_mistaken[0]
+        highestMistaken = card[0] + ' (' + card[1] + '%) ';
+      }
+      
+      averagePercentageOfCorrectAnswers = (deck.average_percentage_of_correct_answers === null) ? 
+      '-' : deck.average_percentage_of_correct_answers + '%';
+
+      amountOfCards = (!deck.amount_of_cards) ? 
+      ' - ' : deck.amount_of_cards;
+      console.log(deck.card_with_highest_mistaken[0])
+      return `<tr> 
+        <td>${deck.deck_name}</td>
+        <td>${amountOfCards}</td>
+        <td>${deck.total_deck_response ?? '-'}</td>
+        <td>${averagePercentageOfCorrectAnswers}</td>
+        <td>${highestMistaken}</td>
+        <td>${deck.last_response ?? '-'}</td>
+        </tr>`
+  }
+
+</script>
+{% endblock js %}
+

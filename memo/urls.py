@@ -6,6 +6,7 @@ from .views import (
     CardAnswersAPIView,
     PresetDecksAPIView,
     AddPresetDeckToUserDeckAPIView,
+    MyLearningTableAPIView,
 )
 from memo.views import DecksAPIView
 
@@ -18,7 +19,6 @@ app_name = "memo"
 urlpatterns = [
     path("cards/<int:pk>/", CardsAPIView.as_view(), name="card"),
     path("cards/", CardsAPIView.as_view(), name="cards"),
-    path("cards/", CardsAPIView.as_view(), name="cards"),
     path(
         "cards/<int:pk>/card_answer/", CardAnswersAPIView.as_view(), name="card_answers"
     ),
@@ -28,5 +28,10 @@ urlpatterns = [
         "preset_decks/<int:pk>/add_to_decks/",
         AddPresetDeckToUserDeckAPIView.as_view(),
         name="preset_deck_to_deck",
+    ),
+    path(
+        "my-learning-results/",
+        MyLearningTableAPIView.as_view(),
+        name="my_learning_result",
     ),
 ]
