@@ -28,7 +28,7 @@ class CardManager(models.Manager):
             .get("last_response__max")
         )
 
-        if last_response != None:
+        if last_response:
             last_response = datetime.datetime.astimezone(last_response).strftime(
                 "%Y-%m-%d %H:%M:%S"
             )
@@ -67,30 +67,9 @@ class CardManager(models.Manager):
         )
 
     def get_card_amount_in_deck(self, deck):
-        return len(self.filter(deck=deck))
+        return self.filter(deck=deck).count()
 
 
 class DeckManager(models.Manager):
-    def get_my_learning_queryset(self, user):
-        from memo.models import Card
-
-        decks = self.filter(owner=user)
-        all_objects = []
-
-        for deck in decks:
-            all_objects.append(
-                {
-                    "deck_name": deck.name,
-                    "amount_of_cards": Card.objects.get_card_amount_in_deck(deck),
-                    "last_response": Card.objects.get_last_response(deck),
-                    "average_percentage_of_correct_answers": Card.objects.get_average_percentage_of_correct_answers(
-                        deck
-                    ),
-                    "total_deck_response": Card.objects.get_total_answer(deck),
-                    "card_with_highest_mistaken": Card.objects.get_card_with_highest_mistaken(
-                        deck
-                    ),
-                }
-            )
-
-        return all_objects
+    def get_decks_by_owner(self, user):
+        return self.filter(owner=user)

@@ -72,3 +72,39 @@ class PresetDeckSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         )
+
+
+class MyLearningTableSerializer(serializers.ModelSerializer):
+
+    deck_name = serializers.CharField(source="name")
+    amount_of_cards = serializers.SerializerMethodField()
+    last_response = serializers.SerializerMethodField()
+    average_percentage_of_correct_answers = serializers.SerializerMethodField()
+    total_deck_response = serializers.SerializerMethodField()
+    card_with_highest_mistaken = serializers.SerializerMethodField()
+
+    def get_amount_of_cards(self, deck):
+        return Card.objects.get_card_amount_in_deck(deck)
+
+    def get_last_response(self, deck):
+        return Card.objects.get_last_response(deck)
+
+    def get_average_percentage_of_correct_answers(self, deck):
+        return Card.objects.get_average_percentage_of_correct_answers(deck)
+
+    def get_total_deck_response(self, deck):
+        return Card.objects.get_total_answer(deck)
+
+    def get_card_with_highest_mistaken(self, deck):
+        return Card.objects.get_card_with_highest_mistaken(deck)
+
+    class Meta:
+        model = Deck
+        fields = (
+            "deck_name",
+            "amount_of_cards",
+            "last_response",
+            "average_percentage_of_correct_answers",
+            "total_deck_response",
+            "card_with_highest_mistaken",
+        )
