@@ -127,9 +127,10 @@ class CardAnswerHistoryManager(models.Manager):
             result = {
                 "consecutive_days": count,
                 "card_front": card.front,
-                "deck": card.deck_id,
                 "answered_today": answered_today,
-                "last_answered_date": (objects[0].get("created_at")).strftime("%Y-%m-%d")
+                "last_answered_date": datetime.astimezone(objects[0].get("created_at")).strftime(
+                "%Y-%m-%d %H:%M:%S")
             }
+
 
         return result
