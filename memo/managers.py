@@ -122,15 +122,15 @@ class CardAnswerHistoryManager(models.Manager):
                 count += 1
                 one_day_less += 1
 
-            card = get_object_or_404(Card,pk=objects[0].get("card"))
+            card = get_object_or_404(Card, pk=objects[0].get("card"))
 
             result = {
                 "consecutive_days": count,
                 "card_front": card.front,
                 "answered_today": answered_today,
-                "last_answered_date": datetime.astimezone(objects[0].get("created_at")).strftime(
-                "%Y-%m-%d %H:%M:%S")
+                "last_answered_date": datetime.astimezone(
+                    objects[0].get("created_at")
+                ).strftime("%Y-%m-%d %H:%M:%S"),
             }
-
 
         return result
