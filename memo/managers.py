@@ -87,15 +87,9 @@ class CardAnswerHistoryManager(models.Manager):
             .annotate(latest_datetime=Max("created_at"))
         )
 
-        objects = (
-            self.filter(
-                created_at__in=[
-                    entry["latest_datetime"] for entry in max_daily_date_times
-                ]
-            )
-            .values("card", "created_at")
-            .order_by("-created_at")
-        )
+        objects = self.filter(
+            created_at__in=[entry["latest_datetime"] for entry in max_daily_date_times]
+        ).order_by("-created_at")
 
         result = []
 
@@ -105,11 +99,11 @@ class CardAnswerHistoryManager(models.Manager):
             count = 0
             one_day_less = 1
 
-            for index in range(0, len(objects)):
+            for index, object in enumerate(objects):
                 one_day_before = (today - timedelta(days=one_day_less)).strftime(
                     "%Y-%m-%d"
                 )
-                created_at = (objects[index].get("created_at")).strftime("%Y-%m-%d")
+                created_at = (object.created_at).strftime("%Y-%m-%d")
 
                 if index == 0 and today.strftime("%Y-%m-%d") == created_at:
                     answered_today = True
@@ -122,14 +116,14 @@ class CardAnswerHistoryManager(models.Manager):
                 count += 1
                 one_day_less += 1
 
-            card = get_object_or_404(Card, pk=objects[0].get("card"))
+            card = get_object_or_404(Card, pk=objects[0].card.id)
 
             result = {
                 "consecutive_days": count,
                 "card_front": card.front,
                 "answered_today": answered_today,
                 "last_answered_date": datetime.astimezone(
-                    objects[0].get("created_at")
+                    objects[0].created_at
                 ).strftime("%Y-%m-%d %H:%M:%S"),
             }
 
