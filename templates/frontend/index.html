@@ -1,16 +1,21 @@
 {% extends 'frontend/base.html' %} 
 {% block content %}
+<style>
+  .different{
+    background-color:gainsboro;
+  }
+</style>
 <div class="container">
     <div class="jumbotron">
         <div class="row align-items-center" style="padding-bottom:30px;">
             <div class="col-md-6">
               <h1>Hello, {{ user.username }}</h1>
-                <div id="legend"></div>
             </div>
             <div class="col-md-6 align-self-center" style="text-align: center;">
                 <div id="buttons"></div>
             </div>
           </div>
+          <div id="consecutive_days_board"></div>
           <div class="container">
             <div class="row" id="pagination"></div>
             <div class="row" id="deckList"></div>
@@ -30,13 +35,56 @@
   const loadPage = () => {
 
     let authToken = localStorage.getItem("auth");
-    
     buttons.innerHTML = `<div style="padding-bottom:10px;">
     <button type="button" class="btn btn-info btn-lg" onClick="openModal('addDeck')">Add deck</button>
     </div>`;
 
     getDeck();
+    getConsecutiveDays();
+
   }
+
+const getConsecutiveDays = () => {
+  $.ajax({
+        url: "/api/consecutive-days/",
+        type: "GET",
+        beforeSend: function(request) {
+          request.setRequestHeader("Authorization", "Token " + authToken);
+        },
+        dataType: "json",
+        success: function (data) {
+          console.log(data)
+          if(data){
+            consecutive_days_board.innerHTML = consecutiveDaysTemplate(data);
+          }
+        }
+    });
+}
+
+const consecutiveDaysTemplate = (data) => {
+  let consecutive_days = "";
+
+  let title = (data.answered_today) ?  
+  "You've already answered today. Keep it going!" : 
+  "You haven't answered any cards today";
+
+  let latest_answer = (data.last_answered_date) ?
+  `Latest answered card: ${data.card_front}  (${data.last_answered_date})` :
+  "Build your streak. Create a card and start answering it!"
+
+  if(data.consecutive_days){
+    consecutive_days = `Consecutive answered days: ${data.consecutive_days}`
+  }
+
+  return `<div class="jumbotron jumbotron-fluid different">
+            <div class="container">
+              <h1 class="display-4">${consecutive_days}</h1>
+              <h1 class="display-5">${title}</h1>
+              <p class="lead">${latest_answer}</p>
+            </div>
+      </div>
+  `
+}
 
 const getDeck = (pagination = false) => {
   $("#deckList").html("")

@@ -7,6 +7,7 @@ from .views import (
     PresetDecksAPIView,
     AddPresetDeckToUserDeckAPIView,
     MyLearningTableAPIView,
+    ConsecutiveDaysAPIView,
 )
 from memo.views import DecksAPIView
 
@@ -33,5 +34,10 @@ urlpatterns = [
         "my-learning-results/",
         MyLearningTableAPIView.as_view(),
         name="my_learning_result",
+    ),
+    path(
+        "consecutive-days/",
+        ConsecutiveDaysAPIView.as_view(),
+        name="consecutive-days",
     ),
 ]

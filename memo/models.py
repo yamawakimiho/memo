@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinLengthValidator
-from .managers import CardManager, DeckManager
+from .managers import CardManager, DeckManager, CardAnswerHistoryManager
 
 
 class Base(models.Model):
@@ -57,6 +57,9 @@ class CardAnswerHistory(Base):
         Card, related_name="card_answers", on_delete=models.CASCADE
     )
     ordering = ["-id"]
+    updated_at = None
+
+    objects = CardAnswerHistoryManager()
 
     def __str__(self):
         return f"{self.card}: {self.user_answer}, {self.correct}"

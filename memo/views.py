@@ -132,3 +132,9 @@ class MyLearningTableAPIView(APIView):
         my_learning = Deck.objects.get_decks_by_owner(request.user)
         serialized_data = MyLearningTableSerializer(my_learning, many=True)
         return Response(data=serialized_data.data, status=status.HTTP_200_OK)
+
+
+class ConsecutiveDaysAPIView(APIView):
+    def get(self, request):
+        consecutive_days = CardAnswerHistory.objects.get_consecutive_days(request.user)
+        return Response(data=consecutive_days, status=status.HTTP_200_OK)
