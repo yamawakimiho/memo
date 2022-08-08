@@ -187,7 +187,7 @@
         resultData.push(jsonData);
 
         $.ajax({
-            url: "/api/card_answer/",
+            url: "/api/card-answer/",
             type: "POST",
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization", "Token " + authToken);

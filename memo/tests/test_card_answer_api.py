@@ -24,7 +24,7 @@ class CardAnswerHistoryTest(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         self.url = config("HOST_VAR") + "/api/cards/"
-        self.url_create = config("HOST_VAR") + "/api/card_answer/"
+        self.url_create = config("HOST_VAR") + "/api/card-answer/"
 
         self.deck = baker.make("Deck", owner=self.user)
         self.card = baker.make("Card", owner=self.user, deck=self.deck)
@@ -45,11 +45,11 @@ class CardAnswerHistoryTest(APITestCase):
     def test_get_card_answer_require_authorization(self):
         self.client.credentials()
 
-        response = self.client.get(self.url + str(self.card.id) + "/card_answer/")
+        response = self.client.get(self.url + str(self.card.id) + "/card-answer/")
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
 
     def test_get_card_answer_success(self):
-        response = self.client.get(self.url + str(self.card.id) + "/card_answer/")
+        response = self.client.get(self.url + str(self.card.id) + "/card-answer/")
 
         created_at = convert_timestamp(self.card_answer.created_at)
 
