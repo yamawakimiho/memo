@@ -81,13 +81,17 @@
         changeToNextCardButton();
     }
 
+    const shuffleArray = (list) => {
+        return list.sort(() => Math.random() - 0.5);
+    }
+
     const progressBar = () => {
         $("#barSuccess").css("width", (100 * progressSuccess) / progressTotal + "%");
         $("#barFailure").css("width", (100 * progressFailure) / progressTotal + "%");
     }
     
     const loadPageTemplate = (data) => {
-        deckData = data.cards;
+        deckData = shuffleArray(data.cards);
         progressTotal = deckData.length;
         title.innerHTML = `<a href="{% url 'memo_front:deck' deck_id=deck_id  %}">
             <div class="goBack" id="goBack">&#8249;</div></a> ` + data.name;
