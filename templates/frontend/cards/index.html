@@ -92,7 +92,7 @@
     
     function getAnswerHistory(card_id){
         $.ajax({
-            url: "/api/cards/" + card_id + "/card_answer/",
+            url: "/api/cards/" + card_id + "/card-answer/",
             type: "GET",
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization", "Token " + authToken);

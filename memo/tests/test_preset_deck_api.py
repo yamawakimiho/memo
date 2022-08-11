@@ -19,7 +19,7 @@ class PresetDeckTest(APITestCase):
         self.assertTrue(created)
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
-        self.url = config("HOST_VAR") + "/api/preset_decks/"
+        self.url = config("HOST_VAR") + "/api/preset-decks/"
 
         self.preset_deck = baker.make("PresetDeck", name="ABC")
         self.preset_card = baker.make("PresetCard", preset_deck=self.preset_deck)
@@ -77,11 +77,11 @@ class PresetDeckTest(APITestCase):
 
     def test_copy_preset_deck_sucess(self):
         response = self.client.post(
-            self.url + str(self.preset_deck.id) + "/add_to_decks/"
+            self.url + str(self.preset_deck.id) + "/add-to-decks/"
         )
         self.assertEqual(1, Deck.objects.count())
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
     def test_copy_preset_deck_error_not_found(self):
-        response = self.client.post(self.url + str(99) + "/add_to_decks/")
+        response = self.client.post(self.url + str(99) + "/add-to-decks/")
         self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
